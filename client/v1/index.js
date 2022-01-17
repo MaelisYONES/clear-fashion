@@ -30,12 +30,10 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // 0. I have 3 favorite brands stored in MY_FAVORITE_BRANDS variable
 // 1. Create a new variable and assign it the link of the cheapest t-shirt
 // I can find on these e-shops
-// 2. Log the variable
-
 var cheapest_Tshirt = "https://adresse.paris/t-shirts-et-polos/3983-t-shirt-ranelagh-1300000259194.html"
+
+// 2. Log the variable
 console.log(cheapest_Tshirt)
-
-
 
 
 /**
@@ -49,27 +47,33 @@ console.log(cheapest_Tshirt)
 
 // 🎯 TODO: Number of products
 // 1. Create a variable and assign it the number of products
-// 2. Log the variable
-
 var nb_products = marketplace.length
+// 2. Log the variable
 console.log(nb_products)
 
 // 🎯 TODO: Brands name
 // 1. Create a variable and assign it the list of brands name only
-// 2. Log the variable
-// 3. Log how many brands we have
 var name_brand = []
-for (var i in marketplace)
-    name_brand[i] = marketplace[i].brand
+for(var i in marketplace)
+name_brand[i] = marketplace[i].brand
 
 const brand_filter = name_brand.filter(function (ele, pos) {
     return name_brand.indexOf(ele) == pos;
 })
 
+// autre façon de faire avec foreach
+// marketplace.forEach(obj => brandNames.push(obj.brand))
+// ou 
+// marketplace.forEach(function(entry){
+//     brandNames.push(entry.brand)
+//})
+
 const unique_brand = new Set(name_brand) // autre méthode avec Set
+// 2. Log the variable
 console.log(name_brand)
 console.log(brand_filter)
 console.log(unique_brand)
+// 3. Log how many brands we have
 console.log(unique_brand.size)
 
 // 🎯 TODO: Sort by price
