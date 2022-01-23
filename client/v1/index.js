@@ -101,6 +101,31 @@ var price_ordered = priceFilter()
 // 2. Create a variable and assign it the list of products by date from recent to old
 // 3. Log the variable
 
+function dateFilter() {
+    let ordered = marketplace.sort(
+        function (a, b) {
+            a = new Date(a.date)
+            b = new Date(b.date)
+            if (a < b) {
+                return 1;
+            }
+            else {
+                return -1;
+            }
+        });
+    return ordered;
+};
+
+function dateFilterbis() {
+    let ordered = marketplace.sort((a, b) => (a.date > b.date) ? -1 : 1);
+    return ordered;
+}
+var date_ordered = dateFilter();
+console.log(date_ordered);
+
+var date_orderedbis = dateFilterbis();
+console.log(date_orderedbis);
+
 
 // 🎯 TODO: Filter a specific price range
 // 1. Filter the list of products between 50€ and 100€
