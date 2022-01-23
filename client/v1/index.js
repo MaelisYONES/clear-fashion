@@ -70,7 +70,7 @@ const brand_filter = name_brand.filter(function (ele, pos) {
 
 // autre example
 let Brands = [];
-for (let i = 0; i < numberProduct; i++) {
+for (let i = 0; i < nb_products; i++) {
     if (!Brands.includes(marketplace[i].brand)) {
         Brands.push(marketplace[i].brand)
     }
@@ -90,12 +90,11 @@ console.log(unique_brand.size)
 // 3. Log the variable
 function priceFilter () {
     let ordered = marketplace.sort((a, b) => (a.price > b.price) ? 1 : -1);
-    let lastElement = ordered.pop();
-    return ordered.unshift(lastElement);
+    return ordered;
 }
 
-var price_ordered = 
-console.log(price_ordered)
+var price_ordered = priceFilter()
+    console.log(price_ordered)
 
 // 🎯 TODO: Sort by date
 // 1. Create a function to sort the marketplace objects by products date
