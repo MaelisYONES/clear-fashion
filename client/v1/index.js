@@ -384,23 +384,47 @@ const COTELE_PARIS = [
 // // A new product is a product `released` less than 2 weeks.
 
 function newProductOnly(items) {
-    for (let i = 0; i < items.length; i++) {
+    var list_false_true = [];
+    for (var i = 0; i < items.length; i++) {
         if (items[i].released >= "2022-01-09") {
-            return true;
+            list_false_true.push(true);
         }
         else {
-            return false;
+            list_false_true.push(false);
         }
+    }
+    if (!list_false_true.includes(false)) {
+        return true;
+    }
+    else {
+        return false;
     }
 }
 var only_new_product = newProductOnly(COTELE_PARIS);
-console.log('Only new product ?' ,only_new_product)
+console.log('Only new product ?',only_new_product)
 
 // 🎯 TODO: Reasonable price
 // // 1. Log if coteleparis is a reasonable price shop (true or false)
 // // A reasonable price if all the products are less than 100€
-
-
+function reasonablePrice(items) {
+    var list_price = [];
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].price <= 100) {
+            list_price.push(true);
+        }
+        else {
+            list_price.push(false);;
+        }
+    }
+    if (!list_price.includes(false)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+var reasonable_price = reasonablePrice(COTELE_PARIS);
+console.log("Reasonable price ?", reasonable_price);
 // 🎯 TODO: Find a specific product
 // 1. Find the product with the uuid `b56c6d88-749a-5b4c-b571-e5b5c6483131`
 // 2. Log the product
