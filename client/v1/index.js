@@ -68,6 +68,14 @@ const brand_filter = name_brand.filter(function (ele, pos) {
 //     brandNames.push(entry.brand)
 //})
 
+// autre example
+let Brands = [];
+for (let i = 0; i < numberProduct; i++) {
+    if (!Brands.includes(marketplace[i].brand)) {
+        Brands.push(marketplace[i].brand)
+    }
+}
+
 const unique_brand = new Set(name_brand) // autre méthode avec Set
 // 2. Log the variable
 console.log(name_brand)
@@ -80,17 +88,13 @@ console.log(unique_brand.size)
 // 1. Create a function to sort the marketplace products by price
 // 2. Create a variable and assign it the list of products by price from lowest to highest
 // 3. Log the variable
-priceFilter = () => {
+function priceFilter () {
     let ordered = marketplace.sort((a, b) => (a.price > b.price) ? 1 : -1);
     let lastElement = ordered.pop();
     return ordered.unshift(lastElement);
 }
-function myFunction() {
-    points.sort(function (a, b) { return a - b });
-    document.getElementById("demo").innerHTML = points;
-}
 
-var price_ordered
+var price_ordered = 
 console.log(price_ordered)
 
 // 🎯 TODO: Sort by date
