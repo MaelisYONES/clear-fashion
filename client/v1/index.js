@@ -33,7 +33,7 @@ console.log(MY_FAVORITE_BRANDS[0]);
 var cheapest_Tshirt = "https://adresse.paris/t-shirts-et-polos/3983-t-shirt-ranelagh-1300000259194.html"
 
 // 2. Log the variable
-console.log(cheapest_Tshirt)
+console.log('The cheapest t-shirt is: ', cheapest_Tshirt)
 
 
 /**
@@ -49,7 +49,7 @@ console.log(cheapest_Tshirt)
 // 1. Create a variable and assign it the number of products
 var nb_products = marketplace.length
 // 2. Log the variable
-console.log(nb_products)
+console.log('The number of products is: ', nb_products)
 
 // 🎯 TODO: Brands name
 // 1. Create a variable and assign it the list of brands name only
@@ -78,6 +78,7 @@ for (let i = 0; i < nb_products; i++) {
 
 const unique_brand = new Set(name_brand) // autre méthode avec Set
 // 2. Log the variable
+console.log('The brand names are:')
 console.log(name_brand)
 console.log(brand_filter)
 console.log(unique_brand)
@@ -94,7 +95,7 @@ function priceFilter () {
 }
 
 var price_ordered = priceFilter()
-    console.log(price_ordered)
+console.log('The marketplace products sorted by price: ', price_ordered)
 
 // 🎯 TODO: Sort by date
 // 1. Create a function to sort the marketplace objects by products date
@@ -121,27 +122,34 @@ function dateFilterbis() {
     return ordered;
 }
 var date_ordered = dateFilter();
-console.log(date_ordered);
+console.log('The marketplace products sorted by date: ',date_ordered);
 
 var date_orderedbis = dateFilterbis();
-console.log(date_orderedbis);
+console.log('The marketplace products sorted by date: ', date_orderedbis);
 
 
 // 🎯 TODO: Filter a specific price range
 // 1. Filter the list of products between 50€ and 100€
 // 2. Log the list
 var productsBetween50And100 = [];
-for (let i = 0; i < nbProduct; i++) {
+for (let i = 0; i < nb_products; i++) {
     if (marketplace[i].price >= 50 && marketplace[i].price <= 100) {
         productsBetween50And100.push(marketplace[i]);
     }
 }
-console.log(productsBetween50And100)
+console.log('The marketplace products between 50€ and 100€: ', productsBetween50And100)
 
 // 🎯 TODO: Average Basket
 // 1. Determine the average basket of the marketplace
 // 2. Log the average
 
+var average = 0;
+for (let i = 0; i < nb_products; i++) {
+    average += marketplace[i].price;
+}
+average = average / nb_products;
+
+console.log('Average price is: ',average)
 
 
 
