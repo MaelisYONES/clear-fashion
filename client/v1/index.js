@@ -458,6 +458,13 @@ jacket.favorite = true;
 
 // 1. Log `blueJacket` and `jacket` variables
 // 2. What do you notice?
+console.log('blueJacket', blueJacket);
+console.log('jacket', jacket);
+
+//Console :
+//{link: 'https://coteleparis.com/collections/tous-les-produits-cotele/products/la-veste-bleu-roi', price: 110, uuid: 'b4b05398-fee0-4b31-90fe-a794d2ccfaaa', favorite: true}
+//{link: 'https://coteleparis.com/collections/tous-les-produits-cotele/products/la-veste-bleu-roi', price: 110, uuid: 'b4b05398-fee0-4b31-90fe-a794d2ccfaaa', favorite: true }
+//It change the properties of bluejacket
 
 blueJacket = {
   'link': 'https://coteleparis.com/collections/tous-les-produits-cotele/products/la-veste-bleu-roi',
@@ -466,9 +473,10 @@ blueJacket = {
 };
 
 // 3. Update `jacket` property with `favorite` to true WITHOUT changing blueJacket properties
-
-
-
+console.log('blueJacket', blueJacket);
+let jacketbis = [].concat(blueJacket);
+jacketbis[0].favorite = true;
+console.log('jacket: ', jacketbis);
 
 
 /**
@@ -480,3 +488,9 @@ blueJacket = {
 // 🎯 TODO: Save in localStorage
 // 1. Save MY_FAVORITE_BRANDS in the localStorage
 // 2. log the localStorage
+localStorage.setItem('MY_FAVORITE_BRANDS', JSON.stringify(MY_FAVORITE_BRANDS));
+//Then to retrieve it from the store and convert to an object again:
+var local_storage = JSON.parse(localStorage.getItem('MY_FAVORITE_BRANDS'));
+//If we need to delete all entries of the store we can simply do:
+//localStorage.clear();
+console.log(local_storage);
