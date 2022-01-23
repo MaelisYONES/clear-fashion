@@ -152,8 +152,6 @@ average = average / nb_products;
 console.log('Average price is: ',average)
 
 
-
-
 /**
  * 🏎
  * We are almost done with the `marketplace` variable
@@ -174,8 +172,57 @@ console.log('Average price is: ',average)
 //   'brand-name-n': [{...}, {...}, ..., {...}],
 // };
 //
+var brand_adresse = [];
+for (var i in marketplace) {
+    if (marketplace[i].brand == "adresse") {
+        brand_adresse.push(marketplace[i])
+    }
+}
+
+var brand_aatise = [];
+for (var i in marketplace) {
+    if (marketplace[i].brand == "aatise") {
+        brand_aatise.push(marketplace[i])
+    }
+}
+
+var brand_loom = [];
+for (var i in marketplace) {
+    if (marketplace[i].brand == "loom") {
+        brand_loom.push(marketplace[i])
+    }
+}
+
+var brand_1083 = [];
+for (var i in marketplace) {
+    if (marketplace[i].brand == "1083") {
+        brand_1083.push(marketplace[i])
+    }
+}
+
+var brand_dedicated = [];
+for (var i in marketplace) {
+    if (marketplace[i].brand == "dedicated") {
+        brand_dedicated.push(marketplace[i])
+    }
+}
+
+const brands = {
+    'adresse': brand_adresse,
+    'aatise': brand_aatise,
+    'loom': brand_loom,
+    '1083': brand_1083,
+    'dedicated': brand_dedicated
+};
+
 // 2. Log the variable
+console.log(brands)
 // 3. Log the number of products by brands
+console.log('adresse: ', brands["adresse"].length)
+console.log('aatise: ', brands["aatise"].length)
+console.log('Loom: ', brands["loom"].length)
+console.log('1083: ',brands["1083"].length)
+console.log('dedicated: ',brands["dedicated"].length)
 
 
 // 🎯 TODO: Sort by price for each brand
