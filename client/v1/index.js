@@ -89,12 +89,12 @@ console.log(unique_brand.size)
 // 1. Create a function to sort the marketplace products by price
 // 2. Create a variable and assign it the list of products by price from lowest to highest
 // 3. Log the variable
-function priceFilter () {
-    let ordered = marketplace.sort((a, b) => (a.price > b.price) ? 1 : -1);
+function priceFilter(items) {
+    let ordered = items.sort((a, b) => (a.price > b.price) ? 1 : -1);
     return ordered;
 }
 
-var price_ordered = priceFilter()
+var price_ordered = priceFilter(marketplace)
 console.log('The marketplace products sorted by price: ', price_ordered)
 
 // 🎯 TODO: Sort by date
@@ -102,8 +102,8 @@ console.log('The marketplace products sorted by price: ', price_ordered)
 // 2. Create a variable and assign it the list of products by date from recent to old
 // 3. Log the variable
 
-function dateFilter() {
-    let ordered = marketplace.sort(
+function dateFilter(items) {
+    let ordered = items.sort(
         function (a, b) {
             a = new Date(a.date)
             b = new Date(b.date)
@@ -117,14 +117,14 @@ function dateFilter() {
     return ordered;
 };
 
-function dateFilterbis() {
-    let ordered = marketplace.sort((a, b) => (a.date > b.date) ? -1 : 1);
+function dateFilterbis(items) {
+    let ordered = items.sort((a, b) => (a.date > b.date) ? -1 : 1);
     return ordered;
 }
-var date_ordered = dateFilter();
+var date_ordered = dateFilter(marketplace);
 console.log('The marketplace products sorted by date: ',date_ordered);
 
-var date_orderedbis = dateFilterbis();
+var date_orderedbis = dateFilterbis(marketplace);
 console.log('The marketplace products sorted by date: ', date_orderedbis);
 
 
@@ -228,14 +228,39 @@ console.log('dedicated: ',brands["dedicated"].length)
 // 🎯 TODO: Sort by price for each brand
 // 1. For each brand, sort the products by price, from highest to lowest
 // 2. Log the sort
+let adresseSortedPrice = priceFilter(brands["adresse"]);
+console.log('adress sorted by price: ', adresseSortedPrice);
 
+let aatiseSortedPrice = priceFilter(brands["aatise"]);
+console.log('aatise sorted by price: ', aatiseSortedPrice);
+
+let loomSortedPrice = priceFilter(brands["loom"]);
+console.log('loom sorted by price: ',loomSortedPrice);
+
+let _1083SortedPrice = priceFilter(brands["1083"]);
+console.log('1083 sorted by price: ',_1083SortedPrice);
+
+let dedicatedSortedPrice = priceFilter(brands["dedicated"]);
+console.log('dedicated sorted by price: ',dedicatedSortedPrice);
 
 // 🎯 TODO: Sort by date for each brand
 // 1. For each brand, sort the products by date, from old to recent
 // 2. Log the sort
 
+const adresseSortedDate = dateFilter(brands["adresse"]);
+console.log('adress sorted by date: ', adresseSortedDate);
 
+const aatiseSortedDate = dateFilter(brands["aatise"]);
+console.log('aatise sorted by date: ',aatiseSortedDate);
 
+const loomSortedDate = dateFilter(brands["loom"]);
+console.log('loom sorted by date: ',loomSortedDate);
+
+const _1083SortedDate = dateFilter(brands["1083"]);
+console.log('1083 sorted by date: ',_1083SortedDate);
+
+const dedicatedSortedDate = dateFilter(brands["dedicated"]);
+console.log('dedicated sorted by date: ', dedicatedSortedDate);
 
 
 /**
