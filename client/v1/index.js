@@ -425,14 +425,23 @@ function reasonablePrice(items) {
 }
 var reasonable_price = reasonablePrice(COTELE_PARIS);
 console.log("Reasonable price ?", reasonable_price);
+
 // 🎯 TODO: Find a specific product
 // 1. Find the product with the uuid `b56c6d88-749a-5b4c-b571-e5b5c6483131`
 // 2. Log the product
-
+var uuidProduct = "b56c6d88-749a-5b4c-b571-e5b5c6483131";
+var product_find = COTELE_PARIS.find(product => product.uuid == uuidProduct);
+console.log('Product find: ', product_find);
 
 // 🎯 TODO: Delete a specific product
 // 1. Delete the product with the uuid `b56c6d88-749a-5b4c-b571-e5b5c6483131`
 // 2. Log the new list of product
+console.log(COTELE_PARIS);
+uuidProduct = 'b56c6d88-749a-5b4c-b571-e5b5c6483131';
+var position = COTELE_PARIS.indexOf(COTELE_PARIS.find(product => product.uuid == uuidProduct));
+//console.log(position);
+var removedItem = COTELE_PARIS.splice(position,1);
+console.log(COTELE_PARIS);
 
 // 🎯 TODO: Save the favorite product
 let blueJacket = {
