@@ -130,7 +130,13 @@ console.log(date_orderedbis);
 // 🎯 TODO: Filter a specific price range
 // 1. Filter the list of products between 50€ and 100€
 // 2. Log the list
-
+var productsBetween50And100 = [];
+for (let i = 0; i < nbProduct; i++) {
+    if (marketplace[i].price >= 50 && marketplace[i].price <= 100) {
+        productsBetween50And100.push(marketplace[i]);
+    }
+}
+console.log(productsBetween50And100)
 
 // 🎯 TODO: Average Basket
 // 1. Determine the average basket of the marketplace
