@@ -274,7 +274,40 @@ console.log('dedicated sorted by date: ', dedicatedSortedDate);
 // 1. Compute the p90 price value of each brand
 // The p90 value (90th percentile) is the lower value expected to be exceeded in 90% of the products
 
+var p90_adresse = 0;
+var p90_aatise = 0;
+var p90_loom = 0;
+var p90_1083 = 0;
+var p90_dedicated = 0;
 
+for (let i = 0; i < adresseSortedPrice.length; i++) {
+    if (i == parseInt(adresseSortedPrice.length * 0.90)) {
+        p90_adresse = adresseSortedPrice[i].price;
+    }
+}
+for (let i = 0; i < aatiseSortedPrice.length; i++) {
+    if (i == parseInt(aatiseSortedPrice.length * 0.90)) {
+        p90_aatise = aatiseSortedPrice[i].price;
+    }
+} for (let i = 0; i < loomSortedPrice.length; i++) {
+    if (i == parseInt(loomSortedPrice.length * 0.90)) {
+        p90_loom = loomSortedPrice[i].price;
+    }
+} for (let i = 0; i < _1083SortedPrice.length; i++) {
+    if (i == parseInt(_1083SortedPrice.length * 0.90)) {
+        p90_1083 = _1083SortedPrice[i].price;
+    }
+} for (let i = 0; i < dedicatedSortedPrice.length; i++) {
+    if (i == parseInt(dedicatedSortedPrice.length * 0.90)) {
+        p90_dedicated = dedicatedSortedPrice[i].price;
+    }
+}
+
+console.log('p90_adresse: ', p90_adresse);
+console.log('p90_aatise: ', p90_aatise);
+console.log('p90_loom: ', p90_loom);
+console.log('p90_1083: ', p90_1083);
+console.log('p90_dedicated: ', p90_dedicated);
 
 
 
