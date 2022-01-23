@@ -383,6 +383,18 @@ const COTELE_PARIS = [
 // // 1. Log if we have new products only (true or false)
 // // A new product is a product `released` less than 2 weeks.
 
+function newProductOnly(items) {
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].released >= "2022-01-09") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
+var only_new_product = newProductOnly(COTELE_PARIS);
+console.log('Only new product ?' ,only_new_product)
 
 // 🎯 TODO: Reasonable price
 // // 1. Log if coteleparis is a reasonable price shop (true or false)
