@@ -140,8 +140,8 @@ for (let i = 0; i < nb_products; i++) {
 }
 console.log('The marketplace products between 50€ and 100€: ', productsBetween50And100)
 
-// 🎯 TODO: Average Basket
-// 1. Determine the average basket of the marketplace
+// 🎯 TODO: Average price
+// 1. Determine the average price of the marketplace
 // 2. Log the average
 
 var average = 0;
