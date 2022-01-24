@@ -93,8 +93,8 @@ function priceFilter(items) {
     let ordered = items.sort((a, b) => (a.price > b.price) ? 1 : -1);
     return ordered;
 }
-
-var price_ordered = priceFilter(marketplace)
+var copie_marketplace = [...marketplace]
+var price_ordered = priceFilter(copie_marketplace)
 console.log('The marketplace products sorted by price: ', price_ordered)
 
 // 🎯 TODO: Sort by date
@@ -121,10 +121,11 @@ function dateFilterbis(items) {
     let ordered = items.sort((a, b) => (a.date > b.date) ? -1 : 1);
     return ordered;
 }
-var date_ordered = dateFilter(marketplace);
+//var copie_marketplace = [...marketplace]
+var date_ordered = dateFilter(copie_marketplace);
 console.log('The marketplace products sorted by date: ',date_ordered);
 
-var date_orderedbis = dateFilterbis(marketplace);
+var date_orderedbis = dateFilterbis(copie_marketplace);
 console.log('The marketplace products sorted by date: ', date_orderedbis);
 
 
@@ -475,9 +476,14 @@ blueJacket = {
 // 3. Update `jacket` property with `favorite` to true WITHOUT changing blueJacket properties
 console.log('blueJacket', blueJacket);
 let jacketbis = [].concat(blueJacket);
-jacketbis[0].favorite = true;
+jacketbis.favorite = true;
 console.log('jacket: ', jacketbis);
 
+// correction
+jacket = JSON.parse(JSON.stringify(blueJacket));
+jacket.favorite = true;
+console.log(jacket);
+console.log(blueJacket);
 
 /**
  * 🎬
