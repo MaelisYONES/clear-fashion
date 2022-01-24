@@ -4,11 +4,11 @@
 // current products on the page
 let currentProducts = [];
 let currentPagination = {};
-let current_show = 12;
 
 // inititiqte selectors
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
+const selectBrand = document.querySelector('#brand-select');
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
 
@@ -114,7 +114,6 @@ const render = (products, pagination) => {
 // Feature 0 - Show more
 // As a user I want to show more products So that I can display 12, 24 or 48 products on the same page
 selectShow.addEventListener('change', event => {
-    current_show = parseInt(event.target.value);
   fetchProducts(currentPagination.currentPage, parseInt(event.target.value))
     .then(setCurrentProducts)
         .then(() => render(currentProducts, currentPagination));
@@ -130,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () =>
 //Feature 1 - Browse pages
 // As a user I want to browse available pages So that I can load more products
 selectPage.addEventListener('change', event => {
-    fetchProducts(parseInt(event.target.value), current_show)
+    fetchProducts(parseInt(event.target.value), currentPagination.pageSize)
         .then(setCurrentProducts)
         .then(() => render(currentProducts, currentPagination));
 });
