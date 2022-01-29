@@ -5,7 +5,7 @@
 let currentProducts = [];
 let currentPagination = {};
 
-// inititiqte selectors
+// inititiate selectors
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const selectBrand = document.querySelector('#brand-select');
@@ -97,10 +97,39 @@ const renderIndicators = pagination => {
   spanNbProducts.innerHTML = count;
 };
 
+const renderBrands = products => {
+    const brandsNames = [];
+    /*for (var i in products) {
+        if (!brandNames.includes(products.brand)) {
+            brandNames.push(products.brand);
+        }
+    }*/
+    products.forEach(product => {
+        if (!brandsNames.includes(product.brand)) {
+            brandsNames.push(product.brand);
+        }
+    })
+    var options = ['<option value="select a brand">select a brand</option>']
+        options.push(Array.from(
+            { 'length': brandsNames.length },
+            (value, index) => `<option value="${brandsNames[index]}">${brandsNames[index]}</option>`
+    ).join(''));
+    options.push('<option value="all brands">all brands</option>')
+
+    selectBrand.innerHTML = options;
+}
+
+
+
+
+
+
+
 const render = (products, pagination) => {
-  renderProducts(products);
-  renderPagination(pagination);
-  renderIndicators(pagination);
+    renderProducts(products);
+    renderPagination(pagination);
+    renderIndicators(pagination);
+    renderBrands(products);
 };
 
 /**
@@ -133,3 +162,61 @@ selectPage.addEventListener('change', event => {
         .then(setCurrentProducts)
         .then(() => render(currentProducts, currentPagination));
 });
+
+//Feature 2 - Filter by brands
+// As a user I want to filter by brands name So that I can browse product for a specific brand
+selectBrand.addEventListener('change', async (event) => {
+    var products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
+    if (event.target.value == "all brands") {
+        products =await fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
+
+    } else {
+        products.result = products.result.filter(item => item.brand == event.target.value)
+    }
+    setCurrentProducts(products);
+    render(currentProducts, currentPagination);
+});
+
+/*function filterBrand(items, brand_chosen) {
+    var list_product_brand = []
+    for (var i in items)
+        if (i[brand] == brand_chosen)
+            list_product_brand.push(i);
+    return list_product_brand;
+}*/
+
+//Feature 3 - Filter by recent products
+//As a user, I want to filter by by recent products. So that I can browse the new released products(less than 2 weeks)
+
+//Feature 4 - Filter by reasonable price
+//As a user, I want to filter by reasonable price. So that I can buy affordable product i.e less than 50€
+
+//Feature 5 - Sort by price
+//As a user, I want to sort by price. So that I can easily identify cheapest and expensive products
+
+//Feature 6 - Sort by date
+//As a user, I want to sort by price. So that I can easily identify recent and old products
+
+//Feature 8 - Number of products indicator
+//As a user, I want to indicate the total number of products. So that I can understand how many products is available
+
+//Feature 9 - Number of recent products indicator
+//As a user, I want to indicate the total number of recent products. So that I can understand how many new products are available
+
+//Feature 10 - p50, p90 and p95 price value indicator
+//As a user, I want to indicate the p50, p90 and p95 price value. So that I can understand the price values of the products
+
+//Feature 11 - Last released date indicator
+//As a user, I want to indicate the last released date. So that I can understand if we have new products
+
+//Feature 12 - Open product link
+//As a user, I want to open product link in a new page. So that I can buy the product easily
+
+//Feature 13 - Save as favorite
+//As a user, I want to save a product as favorite. So that I can retreive this product later
+
+//Feature 14 - Filter by favorite
+//As a user, I want to filter by favorite products. So that I can load only my favorite products
+
+//Feature 15 - Usable and pleasant UX
+//As a user, I want to parse a usable and pleasant web page. So that I can find valuable and useful content
