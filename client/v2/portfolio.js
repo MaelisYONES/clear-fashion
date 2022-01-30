@@ -6,6 +6,9 @@ let currentProducts = [];
 let currentPagination = {};
 
 // inititiate selectors
+
+// instantiate the selectors
+
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const selectBrand = document.querySelector('#brand-select');
@@ -121,10 +124,6 @@ const renderBrands = products => {
 
 
 
-
-
-
-
 const render = (products, pagination) => {
     renderProducts(products);
     renderPagination(pagination);
@@ -138,7 +137,6 @@ const render = (products, pagination) => {
 
 /**
  * Select the number of products to display
- * @type {[type]}
  */
 // Feature 0 - Show more
 // As a user I want to show more products So that I can display 12, 24 or 48 products on the same page
@@ -177,13 +175,13 @@ selectBrand.addEventListener('change', async (event) => {
     render(currentProducts, currentPagination);
 });
 
-/*function filterBrand(items, brand_chosen) {
+function filterBrand(items, brand_chosen) {
     var list_product_brand = []
     for (var i in items)
         if (i[brand] == brand_chosen)
             list_product_brand.push(i);
     return list_product_brand;
-}*/
+}
 
 //Feature 3 - Filter by recent products
 //As a user, I want to filter by by recent products. So that I can browse the new released products(less than 2 weeks)
@@ -220,3 +218,4 @@ selectBrand.addEventListener('change', async (event) => {
 
 //Feature 15 - Usable and pleasant UX
 //As a user, I want to parse a usable and pleasant web page. So that I can find valuable and useful content
+
