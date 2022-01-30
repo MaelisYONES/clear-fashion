@@ -11,11 +11,13 @@ let currentPagination = {};
 
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
+const sectionProducts = document.querySelector('#products');
+const spanNbProducts = document.querySelector('#nbProducts');
 const selectBrand = document.querySelector('#brand-select');
 const selectResonableProducts = document.querySelector('#price-select');
 const selectRecentProducts = document.querySelector('#date-select');
-const sectionProducts = document.querySelector('#products');
-const spanNbProducts = document.querySelector('#nbProducts');
+const selectSort = document.querySelector("#sort-select");
+
 
 /**
  * Set global value
@@ -217,12 +219,43 @@ selectReasonableProducts.addEventListener('change', async (event) => {
 
 //Feature 5 - Sort by price
 //As a user, I want to sort by price. So that I can easily identify cheapest and expensive products
-
 //Feature 6 - Sort by date
 //As a user, I want to sort by price. So that I can easily identify recent and old products
 
+function priceFilter(items) {
+    let ordered = items.sort((a, b) => (a.price > b.price) ? 1 : -1);
+    return ordered;
+}
+function dateFilter(items) {
+    let ordered = items.sort((a, b) => (a.date > b.date) ? -1 : 1);
+    return ordered;
+}
+
+selectSort.addEventListener('change', async (event) => {
+    var products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
+    if (event.target.value == "price-asc") {
+        // products.result = products.result.sort((a, b) => { return a.price - b.price});
+        currentProducts = priceFilter(products);
+    }
+    else if (event.target.value == "price-desc") {
+        //products.result = products.result.sort((a, b) => { return b.price - a.price });
+        currentProducts = priceFilter(products).reverse();
+    }
+    else if (event.target.value == "date-asc") {
+        // products.result = products.result.sort((a, b) => { return new Date(b.released) - new Date(a.released) });
+        currentProducts = dateFilter(products);
+    }
+    else if (event.target.value == "date-desc") {
+        //products.result = products.result.sort((a, b) => { return new Date(a.released) - new Date(b.released)});
+        currentProducts = dateFilter(products).reverse();
+    }
+    else {}
+    //setCurrentProducts(products);
+    render(currentProducts, currentPagination);
+});
 //Feature 8 - Number of products indicator
 //As a user, I want to indicate the total number of products. So that I can understand how many products is available
+// already done by the teacher 
 
 //Feature 9 - Number of recent products indicator
 //As a user, I want to indicate the total number of recent products. So that I can understand how many new products are available
