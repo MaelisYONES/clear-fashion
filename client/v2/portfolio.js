@@ -12,11 +12,16 @@ let currentPagination = {};
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const sectionProducts = document.querySelector('#products');
-const spanNbProducts = document.querySelector('#nbProducts');
 const selectBrand = document.querySelector('#brand-select');
 const selectResonableProducts = document.querySelector('#price-select');
 const selectRecentProducts = document.querySelector('#date-select');
 const selectSort = document.querySelector("#sort-select");
+const spanNbProducts = document.querySelector('#nbProducts');
+const spanNbNewProducts = document.querySelector('#nbNewProducts'); 
+const p50PriceValue = document.querySelector("#p50PriceValue");
+const p90PriceValue = document.querySelector("#p90PriceValue");
+const p95PriceValue = document.querySelector("#p95PriceValue");
+const LastReleaseDate = document.querySelector("#lastReleasedDate");
 
 
 /**
@@ -92,16 +97,6 @@ const renderPagination = pagination => {
 
   selectPage.innerHTML = options;
   selectPage.selectedIndex = currentPage - 1;
-};
-
-/**
- * Render page selector
- * @param  {Object} pagination
- */
-const renderIndicators = pagination => {
-  const {count} = pagination;
-
-  spanNbProducts.innerHTML = count;
 };
 
 const renderBrands = products => {
@@ -260,11 +255,40 @@ selectSort.addEventListener('change', async (event) => {
 //Feature 9 - Number of recent products indicator
 //As a user, I want to indicate the total number of recent products. So that I can understand how many new products are available
 
+/**
+ * Render page selector
+ * @param  {Object} pagination
+ */
+const renderIndicators = pagination => {
+    const { count } = pagination;
+    spanNbProducts.innerHTML = count;
+    var nbRecent = 0;
+    var last_date = new Date("2020-01-01")
+    //var two_weeks_ago = recentProducts(last_date);
+    var two_weeks_ago = new Date(Date.now() - 12096e5);
+    var products = await fetchProducts(1, count);
+    products.result.forEach(item => {
+        var item_date = new Date(item.released)
+        if (item_date.getTime() > two_weeks_ago.getTime()) { nbRecent+=1 }
+    })
+    spanNbNewProducts.innerHTML = nbRecent;
+
 //Feature 10 - p50, p90 and p95 price value indicator
 //As a user, I want to indicate the p50, p90 and p95 price value. So that I can understand the price values of the products
+    var sortProducts = priceFilter(products.result);
+    p50PriceValue.innerHTML = sortProducts[Math.round(count * 0.50)].price;
+    p90PriceValue.innerHTML = sortProducts[Math.round(count * 0.90)].price;
+    p95PriceValue.innerHTML = sortProducts[Math.round(count * 0.95)].price;
+
 
 //Feature 11 - Last released date indicator
-//As a user, I want to indicate the last released date. So that I can understand if we have new products
+    //As a user, I want to indicate the last released date. So that I can understand if we have new products
+    products.result.forEach(item => {
+        var item_date = new Date(item.released)
+        if (item_date.getTime() > last_date) { last_date = item_date }
+    })
+    lastReleaseDate.innerHTML = last_date.toLocaleDateString(); 
+};
 
 //Feature 12 - Open product link
 //As a user, I want to open product link in a new page. So that I can buy the product easily
@@ -277,4 +301,5 @@ selectSort.addEventListener('change', async (event) => {
 
 //Feature 15 - Usable and pleasant UX
 //As a user, I want to parse a usable and pleasant web page. So that I can find valuable and useful content
+
 
