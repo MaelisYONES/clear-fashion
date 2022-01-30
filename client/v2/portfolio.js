@@ -12,6 +12,7 @@ let currentPagination = {};
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const selectBrand = document.querySelector('#brand-select');
+const selectRecentProducts = document.querySelector('#price-select');
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
 
@@ -184,7 +185,17 @@ function filterBrand(items, brand_chosen) {
 }
 
 //Feature 3 - Filter by recent products
-//As a user, I want to filter by by recent products. So that I can browse the new released products(less than 2 weeks)
+//As a user, I want to filter by recent products. So that I can browse the new released products(less than 2 weeks)
+
+selectRecentProducts.addEventListener('change', async (event) => {
+    var products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
+    if (event.target.value == "yes") {
+        products.result = products.result.filter(item => item.price <= 50);
+    }
+    setCurrentProducts(products);
+    render(currentProducts, currentPagination);
+});
+
 
 //Feature 4 - Filter by reasonable price
 //As a user, I want to filter by reasonable price. So that I can buy affordable product i.e less than 50€
