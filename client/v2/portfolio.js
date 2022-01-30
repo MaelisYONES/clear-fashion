@@ -12,7 +12,8 @@ let currentPagination = {};
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const selectBrand = document.querySelector('#brand-select');
-const selectRecentProducts = document.querySelector('#price-select');
+const selectResonableProducts = document.querySelector('#price-select');
+const selectRecentProducts = document.querySelector('#date-select');
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
 
@@ -187,7 +188,25 @@ function filterBrand(items, brand_chosen) {
 //Feature 3 - Filter by recent products
 //As a user, I want to filter by recent products. So that I can browse the new released products(less than 2 weeks)
 
+function recentProducts(product_date) {
+    var now_date = new Date();
+    product_date = new Date(product_date);
+    var numberDay = now_date - product_date;
+    return numberDay;
+}
+
 selectRecentProducts.addEventListener('change', async (event) => {
+    var products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
+    if (event.target.value == "yes") {
+        products.result = products.result.filter(item => recentProducts(item.released) <= 14*24*60*60*1000);
+    }
+    setCurrentProducts(products);
+    render(currentProducts, currentPagination);
+});
+
+//Feature 4 - Filter by reasonable price
+//As a user, I want to filter by reasonable price. So that I can buy affordable product i.e less than 50€
+selectReasonableProducts.addEventListener('change', async (event) => {
     var products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
     if (event.target.value == "yes") {
         products.result = products.result.filter(item => item.price <= 50);
@@ -195,10 +214,6 @@ selectRecentProducts.addEventListener('change', async (event) => {
     setCurrentProducts(products);
     render(currentProducts, currentPagination);
 });
-
-
-//Feature 4 - Filter by reasonable price
-//As a user, I want to filter by reasonable price. So that I can buy affordable product i.e less than 50€
 
 //Feature 5 - Sort by price
 //As a user, I want to sort by price. So that I can easily identify cheapest and expensive products
