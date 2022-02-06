@@ -27,12 +27,13 @@ const parse = data => {
             .trim()
             .replace(/\s/g, ' ');
 
+        const nameInfo = name + materialInfo;
         var link = $(element)
             .find('.productList-link').attr('href');
         const prelink = 'https://www.dedicatedbrand.com';
         link = prelink + link;
 
-      return {name, materialInfo, price, link};
+      return {nameInfo, price, link};
     })
     .get();
 };
