@@ -1,6 +1,6 @@
 /* eslint-disable no-console, no-process-exit */
 const dedicatedbrand = require('./sources/dedicatedbrand');
-const adresseparisbrand = require('./sources/adresseparisbrand.js');
+const adresseparisbrand = require('./sources/adresseparisbrand');
 const montlimartbrand = require('./sources/montlimartbrand');
 
 // The link of the different brands
