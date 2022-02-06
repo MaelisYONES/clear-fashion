@@ -13,15 +13,15 @@ const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const sectionProducts = document.querySelector('#products');
 const selectBrand = document.querySelector('#brand-select');
-const selectResonableProducts = document.querySelector('#price-select');
-const selectRecentProducts = document.querySelector('#date-select');
-const selectSort = document.querySelector("#sort-select");
-const spanNbProducts = document.querySelector('#nbProducts');
-const spanNbNewProducts = document.querySelector('#nbNewProducts'); 
-const p50PriceValue = document.querySelector("#p50PriceValue");
-const p90PriceValue = document.querySelector("#p90PriceValue");
-const p95PriceValue = document.querySelector("#p95PriceValue");
-const LastReleaseDate = document.querySelector("#lastReleasedDate");
+//const selectResonableProducts = document.querySelector('#price-select');
+//const selectRecentProducts = document.querySelector('#date-select');
+//const selectSort = document.querySelector("#sort-select");
+//const spanNbProducts = document.querySelector('#nbProducts');
+//const spanNbNewProducts = document.querySelector('#nbNewProducts'); 
+//const p50PriceValue = document.querySelector("#p50PriceValue");
+//const p90PriceValue = document.querySelector("#p90PriceValue");
+//const p95PriceValue = document.querySelector("#p95PriceValue");
+//const LastReleaseDate = document.querySelector("#lastReleasedDate");
 
 
 /**
@@ -122,7 +122,6 @@ const renderBrands = products => {
 }
 
 
-
 const render = (products, pagination) => {
     renderProducts(products);
     renderPagination(pagination);
@@ -143,14 +142,7 @@ selectShow.addEventListener('change', event => {
   fetchProducts(currentPagination.currentPage, parseInt(event.target.value))
     .then(setCurrentProducts)
         .then(() => render(currentProducts, currentPagination));
-    
 });
-
-document.addEventListener('DOMContentLoaded', () =>
-  fetchProducts()
-    .then(setCurrentProducts)
-    .then(() => render(currentProducts, currentPagination))
-);
 
 //Feature 1 - Browse pages
 // As a user I want to browse available pages So that I can load more products
@@ -174,14 +166,14 @@ selectBrand.addEventListener('change', async (event) => {
     render(currentProducts, currentPagination);
 });
 
-function filterBrand(items, brand_chosen) {
+/*function filterBrand(items, brand_chosen) {
     var list_product_brand = []
     for (var i in items)
         if (i[brand] == brand_chosen)
             list_product_brand.push(i);
     return list_product_brand;
-}
-
+}*/
+/*
 //Feature 3 - Filter by recent products
 //As a user, I want to filter by recent products. So that I can browse the new released products(less than 2 weeks)
 
@@ -259,6 +251,7 @@ selectSort.addEventListener('change', async (event) => {
  * Render page selector
  * @param  {Object} pagination
  */
+/*
 const renderIndicators = pagination => {
     const { count } = pagination;
     spanNbProducts.innerHTML = count;
@@ -302,4 +295,10 @@ const renderIndicators = pagination => {
 //Feature 15 - Usable and pleasant UX
 //As a user, I want to parse a usable and pleasant web page. So that I can find valuable and useful content
 
+*/
 
+document.addEventListener('DOMContentLoaded', () =>
+    fetchProducts()
+        .then(setCurrentProducts)
+        .then(() => render(currentProducts, currentPagination))
+);

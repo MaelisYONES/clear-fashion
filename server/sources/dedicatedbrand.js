@@ -20,9 +20,19 @@ const parse = data => {
         $(element)
           .find('.productList-price')
           .text()
-      );
+        );
+      const materialInfo = $(element)
+            .find('.productList-image-materialInfo')
+            .text()
+            .trim()
+            .replace(/\s/g, ' ');
 
-      return {name, price};
+        var link = $(element)
+            .find('.productList-link').attr('href');
+        const prelink = 'https://www.dedicatedbrand.com';
+        link = prelink + link;
+
+      return {name, materialInfo, price, link};
     })
     .get();
 };
