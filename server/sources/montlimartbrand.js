@@ -52,4 +52,6 @@ module.exports.scrape = async url => {
         console.error(error);
         return null;
     }
+
 };
+
