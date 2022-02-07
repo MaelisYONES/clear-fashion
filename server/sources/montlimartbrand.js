@@ -12,20 +12,22 @@ const parse = data => {
     return $('.category-products .products-grid .item .product-info')
         .map((i, element) => {
             let name = $(element)
-                .find('.product-name')
+                //.find('.product-name')
+                .find('a')
                 .text()
                 .trim()
-                .replace(/\s/g, ' ');
+                .replace(/\s/g, ' ').split("  ");
             const price = parseInt(
                 $(element)
                     .find('.price')
                     .text()
             );
-
+            var color = name[name.length - 1];
             var link = $(element)
-                .find('.product-name').attr('a href');
-            
-            return { name, price, link };
+                //.find('.product-name').attr('a href');
+                .find('a').attr('href');
+            var name_complete = name[0] + color;
+            return { name_complete, price, link };
         })
         .get();
 };

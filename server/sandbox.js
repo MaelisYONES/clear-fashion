@@ -19,7 +19,7 @@ async function sandbox(eshop = 'https://www.montlimart.com/toute-la-collection.h
       // convert JSON object to string
       const data = JSON.stringify(products);
       // write JSON string to a file
-      fs.writeFile('product.json', data, (err) => {
+      fs.writeFile('product_montlimart.json', data, (err) => {
           if (err) {
               throw err;
           }
@@ -28,10 +28,10 @@ async function sandbox(eshop = 'https://www.montlimart.com/toute-la-collection.h
 
     console.log(products);
     console.log('done');
-    process.exit(0);
+    //process.exit(0);
   } catch (e) {
     console.error(e);
-    process.exit(1);
+    //process.exit(1);
   }
 }
 
