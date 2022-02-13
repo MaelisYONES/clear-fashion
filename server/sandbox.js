@@ -1,30 +1,20 @@
 /* eslint-disable no-console, no-process-exit */
 //const dedicatedbrand = require('./sources/dedicatedbrand');
-const adresseparisbrand = require('./sources/adresseparisbrand');
-//const montlimartbrand = require('./sources/montlimartbrand');
+//const adresseparisbrand = require('./sources/adresseparisbrand');
+const montlimartbrand = require('./sources/montlimartbrand');
 
 // The link of the different brands
 // https://www.dedicatedbrand.com/en/men/news
 // https://adresse.paris/602-nouveautes
 // https://www.montlimart.com/toute-la-collection.html
 
-async function sandbox(eshop = 'https://adresse.paris/602-nouveautes') {
+async function sandbox(eshop = 'https://www.montlimart.com/toute-la-collection.html') {
   try {
     console.log(`🕵️‍♀️  browsing ${eshop} source`);
 
     //const products = await dedicatedbrand.scrape(eshop);
-    const products = await adresseparisbrand.scrape(eshop);
-    //const products = await montlimartbrand.scrape(eshop);
-      const fs = require('fs');
-      // convert JSON object to string
-      const data = JSON.stringify(products);
-      // write JSON string to a file
-      fs.writeFile('product_adresseparis.json', data, (err) => {
-          if (err) {
-              throw err;
-          }
-          console.log("JSON data is saved.");
-      });
+    //const products = await adresseparisbrand.scrape(eshop);
+    const products = await montlimartbrand.scrape(eshop);
 
     console.log(products);
     console.log('done');
@@ -37,9 +27,27 @@ async function sandbox(eshop = 'https://adresse.paris/602-nouveautes') {
 
 const [,, eshop] = process.argv;
 
-sandbox(eshop);
+//sandbox(eshop);
+for (var i = 1; i < 9; i++) {
+    page_link = 'https://www.montlimart.com/toute-la-collection.html' + "?p=" + i.toString();
+    sandbox(page_link);
+}
+   
 
-// https://attacomsian.com/blog/nodejs-write-json-object-to-file : json file link 
+function writeInJson(products, path) {
+    productsInfo = JSON.stringify(products);// convert JSON object to string
+    // write JSON string to a file
+    fs.writeFile(path, productsInfo, (err) => {
+        if (err) {
+            throw err;
+        }
+        console.log("JSON data is saved.");
+    });
+}
+
+
+
+// https://attacomsian.com/blog/nodejs-write-json-object-to-file : json file link explanation
 
 /* if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
