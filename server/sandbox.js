@@ -33,12 +33,13 @@ function montlimart_scrap() {
     var listProducts = []
     for (var i = 1; i < 9; i++) {
         page_link = 'https://www.montlimart.com/toute-la-collection.html' + "?p=" + i.toString();
-        const monlimart = sandbox(page_link, monlimart).then(products=> {
+        const monlimart = require('./sources/montlimartbrand');
+        products=sandbox(page_link, monlimart).then(products => {
             for (var product of products) {
                 listProducts.push(product)
             }
-        })
-        writeInJson(listProducts, "./montlimart.json")
+            writeInJson(listProducts, "./montlimart.json")
+        }) 
     }
 }
 
