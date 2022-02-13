@@ -8,16 +8,21 @@
 // https://adresse.paris/630-toute-la-collection?id_category=630&n=118
 // https://www.montlimart.com/toute-la-collection.html
 
+const fs = require("fs");
+const { write } = require("./node_modules/ieee754/index");
+
 async function sandbox(eshop, brand) {
   try {
     console.log(`🕵️‍♀️  browsing ${eshop} source`);
 
     //const products = await dedicatedbrand.scrape(eshop);
     //const products = await adresseparisbrand.scrape(eshop);
+    //const products= await montlimartbrand.scrape(eshop);
     const products = await brand.scrape(eshop);
 
-    console.log(products);
-    console.log('done');
+    return products
+    //console.log(products);
+    //console.log('done');
     //process.exit(0);
   } catch (e) {
     console.error(e);
@@ -25,7 +30,7 @@ async function sandbox(eshop, brand) {
   }
 }
 
-const [,, eshop] = process.argv;
+//const [,, eshop] = process.argv;
 
 //sandbox(eshop);
 
@@ -55,6 +60,27 @@ function montlimart_scrap() {
     }
 }
 
+function dedicatedBrand_scrap() {
+    var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+    var req = new XMLHttpRequest();
+    req.open('GET', 'https://www.dedicatedbrand.com/en/loadfilter', false);
+    req.send(null);
+    var json_file = JSON.parse(req.responseText)
+    var json_dedicated = []
+    for (document of json_file.products) {
+        if (document.uri != undefined) {
+            var product = {};//create the product with the params we want
+            product.name = document.name;
+            product.price = parseInt(document.price.price);
+            product.image = document.image[0];
+            product.link = "https://www.dedicatedbrand.com/en/" + document.canonicalUri;
+            json_dedicated.push(product)
+        }
+    }
+    //console.log(json_dedicated)
+    console.log("Dedicated brand products stored successfully")
+    return json_dedicated
+}
 
 
 function writeInJson(products, path) {
@@ -68,6 +94,15 @@ function writeInJson(products, path) {
     });
 }
 
+function allScrap() {
+    var json_dedicated = dedicatedBrand_scrap();
+    writeInJson(json_dedicated, "./dedicated.json")
+
+    adresseParis_scrap()
+    montlimart_scrap()
+}
+
+allScrap()
 
 
 // https://attacomsian.com/blog/nodejs-write-json-object-to-file : json file link explanation
