@@ -8,13 +8,13 @@ const montlimartbrand = require('./sources/montlimartbrand');
 // https://adresse.paris/602-nouveautes
 // https://www.montlimart.com/toute-la-collection.html
 
-async function sandbox(eshop = 'https://www.montlimart.com/toute-la-collection.html') {
+async function sandbox(eshop, brand) {
   try {
     console.log(`🕵️‍♀️  browsing ${eshop} source`);
 
     //const products = await dedicatedbrand.scrape(eshop);
     //const products = await adresseparisbrand.scrape(eshop);
-    const products = await montlimartbrand.scrape(eshop);
+    const products = await brand.scrape(eshop);
 
     console.log(products);
     console.log('done');
@@ -28,11 +28,19 @@ async function sandbox(eshop = 'https://www.montlimart.com/toute-la-collection.h
 const [,, eshop] = process.argv;
 
 //sandbox(eshop);
-for (var i = 1; i < 9; i++) {
-    page_link = 'https://www.montlimart.com/toute-la-collection.html' + "?p=" + i.toString();
-    sandbox(page_link);
+
+function montlimart_scrap() {
+    var listProducts = []
+    for (var i = 1; i < 9; i++) {
+        page_link = 'https://www.montlimart.com/toute-la-collection.html' + "?p=" + i.toString();
+        const monlimart = sandbox(page_link, monlimart).then(products=> {
+            for (var product of products) {
+                listProducts.push(product)
+            }
+        })
+        writeInJson(listProducts, "./montlimart.json")
+    }
 }
-   
 
 function writeInJson(products, path) {
     productsInfo = JSON.stringify(products);// convert JSON object to string
