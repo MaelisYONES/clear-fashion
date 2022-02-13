@@ -1,11 +1,11 @@
 /* eslint-disable no-console, no-process-exit */
 //const dedicatedbrand = require('./sources/dedicatedbrand');
 //const adresseparisbrand = require('./sources/adresseparisbrand');
-const montlimartbrand = require('./sources/montlimartbrand');
+//const montlimartbrand = require('./sources/montlimartbrand');
 
 // The link of the different brands
 // https://www.dedicatedbrand.com/en/men/news
-// https://adresse.paris/602-nouveautes
+// https://adresse.paris/630-toute-la-collection?id_category=630&n=118
 // https://www.montlimart.com/toute-la-collection.html
 
 async function sandbox(eshop, brand) {
@@ -29,10 +29,22 @@ const [,, eshop] = process.argv;
 
 //sandbox(eshop);
 
+function adresseParis_scrap() {
+    var listProducts = []
+    var page_link = 'https://adresse.paris/630-toute-la-collection?id_category=630&n=118'
+    const adresseParis = require('./sources/adresseparisbrand');
+    products = sandbox(page_link, adresseParis).then(products => {
+        for (var product of products) {
+            listProducts.push(product)
+        }
+        writeInJson(listProducts, "./adresseParis.json")
+    })
+}
+
 function montlimart_scrap() {
     var listProducts = []
     for (var i = 1; i < 9; i++) {
-        page_link = 'https://www.montlimart.com/toute-la-collection.html' + "?p=" + i.toString();
+        var page_link = 'https://www.montlimart.com/toute-la-collection.html' + "?p=" + i.toString();
         const monlimart = require('./sources/montlimartbrand');
         products=sandbox(page_link, monlimart).then(products => {
             for (var product of products) {
@@ -42,6 +54,8 @@ function montlimart_scrap() {
         }) 
     }
 }
+
+
 
 function writeInJson(products, path) {
     productsInfo = JSON.stringify(products);// convert JSON object to string
