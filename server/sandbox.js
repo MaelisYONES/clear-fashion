@@ -9,7 +9,6 @@
 // https://www.montlimart.com/toute-la-collection.html
 
 const fs = require("fs");
-const { write } = require("./node_modules/ieee754/index");
 
 async function sandbox(eshop, brand) {
   try {
@@ -37,8 +36,8 @@ async function sandbox(eshop, brand) {
 function adresseParis_scrap() {
     var listProducts = []
     var page_link = 'https://adresse.paris/630-toute-la-collection?id_category=630&n=118'
-    const adresseParis = require('./sources/adresseparisbrand');
-    products = sandbox(page_link, adresseParis).then(products => {
+    const adresseparisbrand = require('./sources/adresseparisbrand');
+    products = sandbox(page_link, adresseparisbrand).then(products => {
         for (var product of products) {
             listProducts.push(product)
         }
@@ -50,8 +49,8 @@ function montlimart_scrap() {
     var listProducts = []
     for (var i = 1; i < 9; i++) {
         var page_link = 'https://www.montlimart.com/toute-la-collection.html' + "?p=" + i.toString();
-        const monlimart = require('./sources/montlimartbrand');
-        products=sandbox(page_link, monlimart).then(products => {
+        const montlimartbrand = require('./sources/montlimartbrand');
+        products = sandbox(page_link, montlimartbrand).then(products => {
             for (var product of products) {
                 listProducts.push(product)
             }
