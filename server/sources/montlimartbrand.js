@@ -11,7 +11,8 @@ const parse = data => {
 
     return $('.category-products .products-grid .item .product-info')
         .map((i, element) => {
-            let name = $(element)
+            const brand = "montlimart"
+            let name_ = $(element)
                 //.find('.product-name')
                 .find('a')
                 .text()
@@ -22,12 +23,14 @@ const parse = data => {
                     .find('.price')
                     .text()
             );
-            var color = name[name.length - 1];
+           
+            const image = $(element).find('img').attr('src');
+            var color = name_[name_.length - 1];
             var link = $(element)
                 //.find('.product-name').attr('a href');
                 .find('a').attr('href');
-            var name_complete = name[0] + color;
-            return { name_complete, price, link };
+            var name = name_[0] + color;
+            return {brand, name, price, image, link };
         })
         .get();
 };

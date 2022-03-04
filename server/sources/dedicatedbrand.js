@@ -10,7 +10,10 @@ const parse = data => {
   const $ = cheerio.load(data);
 
   return $('.productList-container .productList')
-    .map((i, element) => {
+      .map((i, element) => {
+
+      const brand = "dedicated";
+
       const name = $(element)
         .find('.productList-title')
         .text()
@@ -33,7 +36,7 @@ const parse = data => {
         const prelink = 'https://www.dedicatedbrand.com';
         link = prelink + link;
 
-      return {nameInfo, price, link};
+      return {brand, nameInfo, price, link};
     })
     .get();
 };

@@ -69,6 +69,7 @@ function dedicatedBrand_scrap() {
     for (document of json_file.products) {
         if (document.uri != undefined) {
             var product = {};//create the product with the params we want
+            product.brand = "dedicated";
             product.name = document.name;
             product.price = parseInt(document.price.price);
             product.image = document.image[0];

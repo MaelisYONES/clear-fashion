@@ -8,24 +8,32 @@ const cheerio = require('cheerio');
  */
 const parse = data => {
     const $ = cheerio.load(data);
+    const released = new Date();
 
     return $('.product_list .ajax_block_product')
         .map((i, element) => {
+
+            const brand = "Adresse_Paris"; 
             const name = $(element)
                 .find('.product-name')
                 .text()
                 .trim()
                 .replace(/\s/g, ' ').split('  ')[0];
+
             const price = parseInt(
                 $(element)
                     .find('.price')
                     .text()
             );
 
+            const image = $(element).find('img').attr('src');
+
             var link = $(element)
                 .find('.product-name').attr('href');
 
-            return { name, price, link };
+            const date = released.toLocaleDateString()
+
+            return {brand, name, price, image, link, date };
         })
         .get();
 };
