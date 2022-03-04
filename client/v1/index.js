@@ -97,6 +97,18 @@ var copie_marketplace = [...marketplace]
 var price_ordered = priceFilter(copie_marketplace)
 console.log('The marketplace products sorted by price: ', price_ordered)
 
+// ou autre méthode 
+
+function priceCompare(a, b) {
+    return parseFloat(a.price) - parseFloat(b.price);
+}
+
+let market = marketplace;
+
+sortByPrice= market.sort(priceCompare);
+console.log("Sort by price : " + sortByPrice);
+
+
 // 🎯 TODO: Sort by date
 // 1. Create a function to sort the marketplace objects by products date
 // 2. Create a variable and assign it the list of products by date from recent to old
@@ -128,6 +140,15 @@ console.log('The marketplace products sorted by date: ',date_ordered);
 var date_orderedbis = dateFilterbis(copie_marketplace);
 console.log('The marketplace products sorted by date: ', date_orderedbis);
 
+// ou autre méthode
+function dateCompare(a, b) {
+    return new Date(a.date) - new Date(b.date);
+}
+
+let market = marketplace;
+
+sortByDate = market.sort(dateCompare);
+console.log("Sort by date : " + sortByDate);
 
 // 🎯 TODO: Filter a specific price range
 // 1. Filter the list of products between 50€ and 100€
@@ -139,6 +160,10 @@ for (let i = 0; i < nb_products; i++) {
     }
 }
 console.log('The marketplace products between 50€ and 100€: ', productsBetween50And100)
+
+// ou autre méthode
+const products50and100 = marketplace.filter(({price }) => price => 50 && price <= 100);
+console.log('The marketplace products between 50€ and 100€: ', products50And100)
 
 // 🎯 TODO: Average price
 // 1. Determine the average price of the marketplace
@@ -217,7 +242,7 @@ const brands = {
 };
 
 // 2. Log the variable
-console.log(brands)
+console.log( "Brands :" + brands)
 // 3. Log the number of products by brands
 console.log('adresse: ', brands["adresse"].length)
 console.log('aatise: ', brands["aatise"].length)
@@ -242,7 +267,16 @@ let _1083SortedPrice = priceFilter(brands["1083"]);
 console.log('1083 sorted by price: ',_1083SortedPrice);
 
 let dedicatedSortedPrice = priceFilter(brands["dedicated"]);
-console.log('dedicated sorted by price: ',dedicatedSortedPrice);
+console.log('dedicated sorted by price: ', dedicatedSortedPrice);
+
+// ou autre méthode
+console.log("Products sorted by price (from highest to lowest)\n");
+for (const i in brands) {
+    let sortBrandByPrice = sortByPrice(brands[i]).reverse();
+    console.table(sortBrandByPrice);
+};
+
+
 
 // 🎯 TODO: Sort by date for each brand
 // 1. For each brand, sort the products by date, from old to recent
@@ -262,6 +296,13 @@ console.log('1083 sorted by date: ',_1083SortedDate);
 
 const dedicatedSortedDate = dateFilter(brands["dedicated"]);
 console.log('dedicated sorted by date: ', dedicatedSortedDate);
+
+// ou autre méthode
+console.log("Products sorted by date (from old to recent)\n");
+for (const i in brands) {
+    let sortBrandByDate = sortByDate(brands[i]).reverse();
+    console.table(sortBrandByDate);
+};
 
 
 /**
@@ -402,7 +443,21 @@ function newProductOnly(items) {
     }
 }
 var only_new_product = newProductOnly(COTELE_PARIS);
-console.log('Only new product ?',only_new_product)
+console.log('Only new product ?', only_new_product)
+
+// autre méthode 
+let nbNewProduct = 0;// useful to see the condition 'only'
+let newReleasedProducts = false;// since we want a true or false
+let date = new Date();
+let currDate = date.toISOString().split('T')[0];
+for (const i in COTELE_PARIS) {
+    var difference = Math.abs(currDate - COTELE_PARIS[i].released);
+    const days = difference / (1000 * 3600 * 24)
+    if (days < 14) nbNewProduct += 1;
+};
+if (nbNewProduct == COTELE_PARIS.length) newReleasedProducts = true;
+console.log("New released products : " + newReleasedProducts);
+
 
 // 🎯 TODO: Reasonable price
 // // 1. Log if coteleparis is a reasonable price shop (true or false)
@@ -426,6 +481,15 @@ function reasonablePrice(items) {
 }
 var reasonable_price = reasonablePrice(COTELE_PARIS);
 console.log("Reasonable price ?", reasonable_price);
+
+// autre méthode
+let nbProductUnder100 = 0;// useful to see the condition 'only'
+let reasonablePrice = false;// since we want a true or false
+for (const i in COTELE_PARIS) {
+    if (COTELE_PARIS[i].price < 100) nbProductUnder100 += 1;
+};
+if (nbProductUnder100 == COTELE_PARIS.length) reasonablePrice = true;
+console.log("Reasonable price : " + reasonablePrice);
 
 // 🎯 TODO: Find a specific product
 // 1. Find the product with the uuid `b56c6d88-749a-5b4c-b571-e5b5c6483131`
@@ -485,6 +549,13 @@ jacket.favorite = true;
 console.log(jacket);
 console.log(blueJacket);
 
+//autre méthode
+jacket = Object.assign({}, blueJacket);
+jacket.favorite = true;
+
+console.log("BlueJacket variable : " + blueJacket)
+console.log("Jacket variable : " + jacket);
+
 /**
  * 🎬
  * The End
@@ -495,8 +566,14 @@ console.log(blueJacket);
 // 1. Save MY_FAVORITE_BRANDS in the localStorage
 // 2. log the localStorage
 localStorage.setItem('MY_FAVORITE_BRANDS', JSON.stringify(MY_FAVORITE_BRANDS));
+//ou autre méthode
+localStorage.setItem("favorite brands : " + MY_FAVORITE_BRANDS)
+
 //Then to retrieve it from the store and convert to an object again:
 var local_storage = JSON.parse(localStorage.getItem('MY_FAVORITE_BRANDS'));
 //If we need to delete all entries of the store we can simply do:
 //localStorage.clear();
 console.log(local_storage);
+
+//ou autre méthode
+console.log(window.localStorage)
