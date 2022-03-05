@@ -1,10 +1,10 @@
-// Invoking strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
+﻿// Invoking strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
 'use strict';
 
 // current products on the page
 let currentProducts = [];
 let currentPagination = {};
-
+let favorite_list = [];
 // inititiate selectors
 
 // instantiate the selectors
@@ -13,16 +13,18 @@ const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const sectionProducts = document.querySelector('#products');
 const selectBrand = document.querySelector('#brand-select');
-//const selectResonableProducts = document.querySelector('#price-select');
-//const selectRecentProducts = document.querySelector('#date-select');
-//const selectSort = document.querySelector("#sort-select");
-//const spanNbProducts = document.querySelector('#nbProducts');
-//const spanNbNewProducts = document.querySelector('#nbNewProducts'); 
-//const p50PriceValue = document.querySelector("#p50PriceValue");
-//const p90PriceValue = document.querySelector("#p90PriceValue");
-//const p95PriceValue = document.querySelector("#p95PriceValue");
-//const LastReleaseDate = document.querySelector("#lastReleasedDate");
 
+
+const selectReasonableProducts = document.querySelector('#price-select');
+const selectRecentProducts = document.querySelector('#date-select');
+const selectSort = document.querySelector("#sort-select");
+const spanNbProducts = document.querySelector('#nbProducts');
+const spanNbNewProducts = document.querySelector('#nbNewProducts'); 
+const spanp50 = document.querySelector("#p50PriceValue");
+const spanp90 = document.querySelector("#p90PriceValue");
+const spanp95 = document.querySelector("#p95PriceValue");
+const spanLastReleasedDate = document.querySelector("#lastReleasedDate");
+const selectShowFavorite = document.querySelector('#show-favorite');
 
 /**
  * Set global value
@@ -66,13 +68,30 @@ const fetchProducts = async (page = 1, size = 12) => {
 const renderProducts = products => {
   const fragment = document.createDocumentFragment();
   const div = document.createElement('div');
+    
+  /*var favourite_status = false;
+  if (product.uuid in favourite_list) {
+      favourite_status = true;
+  }*/
+
   const template = products
     .map(product => {
       return `
       <div class="product" id=${product.uuid}>
-        <span>${product.brand}</span>
-        <a href="${product.link}">${product.name}</a>
-        <span>${product.price}</span>
+         <div>
+          <span>Brand 👚 : </span>
+          <strong>${product.brand}</strong>
+        </div>
+        <div>
+          <span>Link 📎 : </span>
+          <a href="${product.link}" target="_blank">${product.name}</a>
+        </div>
+          <span>Price 💸 : </span>
+          <strong>${product.price} €</strong>
+        <div>
+          <input type="checkbox" onclick="checkFavorite('${product.uuid}')" ${product.favorite ? "checked" : ""}>
+          <label for="favorite-product">Add to favorite</label>
+        </div>
       </div>
     `;
     })
@@ -98,6 +117,26 @@ const renderPagination = pagination => {
   selectPage.innerHTML = options;
   selectPage.selectedIndex = currentPage - 1;
 };
+
+const renderIndicators = pagination => {
+    const { count } = pagination;
+
+    spanNbProducts.innerHTML = count;
+    spanNbNewProducts.innerHTML = NumberNewProducts();
+    if (count != 0) {
+        spanp50.innerHTML = Percentile(0.50) + " €";
+        spanp90.innerHTML = Percentile(0.90) + " €";
+        spanp95.innerHTML = Percentile(0.95) + " €";
+        spanLastReleasedDate.innerHTML = LastReleased();
+    }
+    else {
+        spanp50.innerHTML = "None";
+        spanp90.innerHTML = "None";
+        spanp95.innerHTML = "None";
+        spanLastReleasedDate.innerHTML = "None";
+    } 
+};
+
 
 const renderBrands = products => {
     const brandsNames = [];
@@ -136,7 +175,7 @@ const render = (products, pagination) => {
 /**
  * Select the number of products to display
  */
-// Feature 0 - Show more
+// Feature 0 - Show more : Fonctionne
 // As a user I want to show more products So that I can display 12, 24 or 48 products on the same page
 selectShow.addEventListener('change', event => {
   fetchProducts(currentPagination.currentPage, parseInt(event.target.value))
@@ -152,33 +191,52 @@ selectPage.addEventListener('change', event => {
         .then(() => render(currentProducts, currentPagination));
 });
 
-//Feature 2 - Filter by brands
+document.addEventListener('DOMContentLoaded', () =>
+    fetchProducts()
+        .then(setCurrentProducts)
+        .then(() => render(currentProducts, currentPagination))
+);
+
+//Feature 2 - Filter by brands : Fonctionne pas 
 // As a user I want to filter by brands name So that I can browse product for a specific brand
-selectBrand.addEventListener('change', async (event) => {
+
+/*selectBrand.addEventListener('change', async (event) => {
     var products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
     if (event.target.value == "all brands") {
-        products =await fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
+        products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
 
     } else {
         products.result = products.result.filter(item => item.brand == event.target.value)
     }
-    setCurrentProducts(products);
+    setCurrentProducts();
     render(currentProducts, currentPagination);
-});
+});*/
 
-/*function filterBrand(items, brand_chosen) {
-    var list_product_brand = []
-    for (var i in items)
-        if (i[brand] == brand_chosen)
-            list_product_brand.push(i);
-    return list_product_brand;
-}*/
-/*
-//Feature 3 - Filter by recent products
+selectBrand.addEventListener('change', event => {
+    fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
+        .then(setCurrentProducts)
+        .then(() => render(filterBrand(currentProducts, event.target.value), currentPagination));
+})
+
+function filterBrand(currentProducts, brand) {
+    var filteredProducts = []
+    if (brand == "all brands") {
+        filteredProducts = [...currentProducts]
+    }
+    for (var product of currentProducts) {
+        if (product.brand == brand) {
+            filteredProducts.push(product)
+        }
+    }
+    return filteredProducts
+}
+
+
+//Feature 3 - Filter by recent products : Fonctionne
 //As a user, I want to filter by recent products. So that I can browse the new released products(less than 2 weeks)
 
 function recentProducts(product_date) {
-    var now_date = new Date();
+    var now_date = new Date('2022-01-30');
     product_date = new Date(product_date);
     var numberDay = now_date - product_date;
     return numberDay;
@@ -193,20 +251,25 @@ selectRecentProducts.addEventListener('change', async (event) => {
     render(currentProducts, currentPagination);
 });
 
-//Feature 4 - Filter by reasonable price
-//As a user, I want to filter by reasonable price. So that I can buy affordable product i.e less than 50�
+
+
+
+//Feature 4 - Filter by reasonable price : Fonctionne
+//As a user, I want to filter by reasonable price. So that I can buy affordable product i.e less than 50€
 selectReasonableProducts.addEventListener('change', async (event) => {
     var products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
     if (event.target.value == "yes") {
-        products.result = products.result.filter(item => item.price <= 50);
+        products.result = products.result.filter(item => item.price <= 20);
     }
     setCurrentProducts(products);
     render(currentProducts, currentPagination);
 });
 
-//Feature 5 - Sort by price
+
+
+//Feature 5 - Sort by price : Fonctionne
 //As a user, I want to sort by price. So that I can easily identify cheapest and expensive products
-//Feature 6 - Sort by date
+//Feature 6 - Sort by date ; Fonctionne
 //As a user, I want to sort by price. So that I can easily identify recent and old products
 
 function priceFilter(items) {
@@ -218,87 +281,117 @@ function dateFilter(items) {
     return ordered;
 }
 
-selectSort.addEventListener('change', async (event) => {
-    var products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
-    if (event.target.value == "price-asc") {
-        // products.result = products.result.sort((a, b) => { return a.price - b.price});
-        currentProducts = priceFilter(products);
+selectSort.addEventListener('change', event => {
+    fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
+        .then(setCurrentProducts)
+        .then(() => render(SortFunction(currentProducts, event.target.value), currentPagination));
+})
+
+function SortFunction(currentProducts, selector) {
+    let clone = [...currentProducts]
+    var sortedProducts = []
+    if (selector == "select an option") {
+        sortedProducts = [...currentProducts]
     }
-    else if (event.target.value == "price-desc") {
-        //products.result = products.result.sort((a, b) => { return b.price - a.price });
-        currentProducts = priceFilter(products).reverse();
+    else if (selector == "price-asc") {
+        sortedProducts = priceFilter(clone)
     }
-    else if (event.target.value == "date-asc") {
-        // products.result = products.result.sort((a, b) => { return new Date(b.released) - new Date(a.released) });
-        currentProducts = dateFilter(products);
+    else if (selector == "price-desc") {
+        sortedProducts = priceFilter(clone).reverse()
     }
-    else if (event.target.value == "date-desc") {
-        //products.result = products.result.sort((a, b) => { return new Date(a.released) - new Date(b.released)});
-        currentProducts = dateFilter(products).reverse();
+    else if (selector == "date-asc") {
+        dateFilter(clone)
     }
-    else {}
-    //setCurrentProducts(products);
-    render(currentProducts, currentPagination);
-});
-//Feature 8 - Number of products indicator
+    else if (selector == "date-desc") {
+        dateFilter(clone).reverse()
+    }
+    return sortedProducts
+}
+
+
+//Feature 8 - Number of products indicator : Fonctionne
 //As a user, I want to indicate the total number of products. So that I can understand how many products is available
 // already done by the teacher 
 
-//Feature 9 - Number of recent products indicator
+
+//Feature 9 - Number of recent products indicator : Fonctionne
 //As a user, I want to indicate the total number of recent products. So that I can understand how many new products are available
 
-/**
- * Render page selector
- * @param  {Object} pagination
- */
-/*
-const renderIndicators = pagination => {
-    const { count } = pagination;
-    spanNbProducts.innerHTML = count;
-    var nbRecent = 0;
-    var last_date = new Date("2020-01-01")
-    //var two_weeks_ago = recentProducts(last_date);
-    var two_weeks_ago = new Date(Date.now() - 12096e5);
-    var products = await fetchProducts(1, count);
-    products.result.forEach(item => {
-        var item_date = new Date(item.released)
-        if (item_date.getTime() > two_weeks_ago.getTime()) { nbRecent+=1 }
-    })
-    spanNbNewProducts.innerHTML = nbRecent;
+    function NumberNewProducts() {
+        var count = 0
+        for (var product of currentProducts) {
+            //let today = new Date(Date.now())
+            let today = new Date('2022-01-30')
+            let released = new Date(product.released);
+            if (today - released < 14 * 1000 * 60 * 60 * 24) {
+                count += 1
+            }
+        }
+        return count
+    }
 
-//Feature 10 - p50, p90 and p95 price value indicator
+
+//Feature 10 - p50, p90 and p95 price value indicator : Fonctionne
 //As a user, I want to indicate the p50, p90 and p95 price value. So that I can understand the price values of the products
-    var sortProducts = priceFilter(products.result);
-    p50PriceValue.innerHTML = sortProducts[Math.round(count * 0.50)].price;
-    p90PriceValue.innerHTML = sortProducts[Math.round(count * 0.90)].price;
-    p95PriceValue.innerHTML = sortProducts[Math.round(count * 0.95)].price;
+    
+function Percentile(p_number) {
+    let clone = [...currentProducts]
+    var sortedProducts = priceFilter(clone)
+    var index = Math.round(p_number * sortedProducts.length)
+    var percentile = sortedProducts[index].price
+    return percentile.toString()
+}
 
 
-//Feature 11 - Last released date indicator
+//Feature 11 - Last released date indicator : Fonctionne
     //As a user, I want to indicate the last released date. So that I can understand if we have new products
-    products.result.forEach(item => {
-        var item_date = new Date(item.released)
-        if (item_date.getTime() > last_date) { last_date = item_date }
-    })
-    lastReleaseDate.innerHTML = last_date.toLocaleDateString(); 
-};
+    function LastReleased() {
+        var sortedProducts = SortProducts(currentProducts, "date-asc")
+        return sortedProducts[0].released
+    }
 
-//Feature 12 - Open product link
+
+//Feature 12 - Open product link : Fonctionne
 //As a user, I want to open product link in a new page. So that I can buy the product easily
 
-//Feature 13 - Save as favorite
+//Feature 13 - Save as favorite : Fonctionne pas
 //As a user, I want to save a product as favorite. So that I can retreive this product later
+function AddFavorite(uuid) {
+    //console.log(uuid)
+    favorite_list.push(uuid);
+    //console.log(favorite_list)
+    render(currentProducts, currentPagination)
+}
 
-//Feature 14 - Filter by favorite
+
+//Feature 14 - Filter by favorite : Fonctionne pas
 //As a user, I want to filter by favorite products. So that I can load only my favorite products
 
-//Feature 15 - Usable and pleasant UX
+selectShowFavorite.addEventListener('change', event => {
+    fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
+        .then(setCurrentProducts)
+        .then(() => render(filterFavorite(currentProducts, event.target.value), currentPagination));
+})
+
+function filterFavorite(currentProducts, selector) {
+    var filteredProducts = []
+    if (selector == "no") {
+        filteredProducts = [...currentProducts]
+    }
+    else {
+        for (var product of currentProducts) {
+
+            if (favorite_list.includes(product.uuid)) {
+                filteredProducts.push(product)
+            }
+        }
+    }
+
+    return filteredProducts
+}
+
+//Feature 15 - Usable and pleasant UX : done 
 //As a user, I want to parse a usable and pleasant web page. So that I can find valuable and useful content
 
-*/
 
-document.addEventListener('DOMContentLoaded', () =>
-    fetchProducts()
-        .then(setCurrentProducts)
-        .then(() => render(currentProducts, currentPagination))
-);
+
