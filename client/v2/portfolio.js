@@ -4,7 +4,11 @@
 // current products on the page
 let currentProducts = [];
 let currentPagination = {};
-let favorite_list = [];
+let products_favorite = [];
+let check_reasonable = false;
+let check_recentlyDate = false;
+let check_favorite = false;
+
 // inititiate selectors
 
 // instantiate the selectors
@@ -75,21 +79,22 @@ const renderProducts = products => {
   }*/
 
   const template = products
-    .map(product => {
+      .map(product =>{
       return `
       <div class="product" id=${product.uuid}>
          <div>
-          <span>Brand 👚 : </span>
+          <span>Brand 🛍 : </span>
           <strong>${product.brand}</strong>
         </div>
         <div>
           <span>Link 📎 : </span>
           <a href="${product.link}" target="_blank">${product.name}</a>
         </div>
-          <span>Price 💸 : </span>
+          <span>Price 💰 : </span>
           <strong>${product.price} €</strong>
         <div>
-          <input type="checkbox" onclick="checkFavorite('${product.uuid}')" ${product.favorite ? "checked" : ""}>
+          <span>Favorite ❤ : </span>
+          <input type="checkbox" onclick="addFavorite('${product.uuid}')">
           <label for="favorite-product">Add to favorite</label>
         </div>
       </div>
@@ -138,27 +143,37 @@ const renderIndicators = pagination => {
 };
 
 
-const renderBrands = products => {
+/*const renderBrands = products => {
     const brandsNames = [];
-    /*for (var i in products) {
-        if (!brandNames.includes(products.brand)) {
-            brandNames.push(products.brand);
-        }
-    }*/
-    products.forEach(product => {
+    var options= products.map(product => {
         if (!brandsNames.includes(product.brand)) {
             brandsNames.push(product.brand);
         }
+        return `<option value="${product.brand}"${currentBrand === product.brand ? "selected" : ""}>${product.brand}</option>`;
     })
     var options = ['<option value="select a brand">select a brand</option>']
         options.push(Array.from(
-            { 'length': brandsNames.length },
+            {'length': brandsNames.length },
             (value, index) => `<option value="${brandsNames[index]}">${brandsNames[index]}</option>`
     ).join(''));
     options.push('<option value="all brands">all brands</option>')
 
-    selectBrand.innerHTML = options;
-}
+    selectBrand.innerHTML = options.join('');
+}*/
+
+
+// Version bis
+/*const renderBrands = products => {
+    let options = [... new Set(products.flatMap(x => x.brand))];
+
+    selectBrand[0] = new Option("all");
+    var i = 1;
+    for (var option of options) {
+        selectBrand[i] = new Option(option);
+        i += 1;
+    }
+
+};*/
 
 
 const render = (products, pagination) => {
@@ -212,24 +227,27 @@ document.addEventListener('DOMContentLoaded', () =>
     render(currentProducts, currentPagination);
 });*/
 
-selectBrand.addEventListener('change', event => {
+
+
+// For version bis
+/*selectBrand.addEventListener('change', event => {
     fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
         .then(setCurrentProducts)
         .then(() => render(filterBrand(currentProducts, event.target.value), currentPagination));
 })
 
-function filterBrand(currentProducts, brand) {
+function filterBrand(currentProducts, brandName) {
     var filteredProducts = []
-    if (brand == "all brands") {
+    if (brandName == "all") {
         filteredProducts = [...currentProducts]
     }
     for (var product of currentProducts) {
-        if (product.brand == brand) {
+        if (product.brand == brandName) {
             filteredProducts.push(product)
         }
     }
     return filteredProducts
-}
+}*/
 
 
 //Feature 3 - Filter by recent products : Fonctionne
@@ -277,7 +295,7 @@ function priceFilter(items) {
     return ordered;
 }
 function dateFilter(items) {
-    let ordered = items.sort((a, b) => (a.date > b.date) ? -1 : 1);
+    let ordered = items.sort((a, b) => (new Date(a.released) > new Date(b.released)) ? -1 : 1);
     return ordered;
 }
 
@@ -290,7 +308,7 @@ selectSort.addEventListener('change', event => {
 function SortFunction(currentProducts, selector) {
     let clone = [...currentProducts]
     var sortedProducts = []
-    if (selector == "select an option") {
+    if (selector == "no-sort") {
         sortedProducts = [...currentProducts]
     }
     else if (selector == "price-asc") {
@@ -300,10 +318,10 @@ function SortFunction(currentProducts, selector) {
         sortedProducts = priceFilter(clone).reverse()
     }
     else if (selector == "date-asc") {
-        dateFilter(clone)
+        sortedProducts=dateFilter(clone)
     }
     else if (selector == "date-desc") {
-        dateFilter(clone).reverse()
+        sortedProducts=dateFilter(clone).reverse()
     }
     return sortedProducts
 }
@@ -356,13 +374,15 @@ function Percentile(p_number) {
 
 //Feature 13 - Save as favorite : Fonctionne pas
 //As a user, I want to save a product as favorite. So that I can retreive this product later
-function AddFavorite(uuid) {
-    //console.log(uuid)
-    favorite_list.push(uuid);
-    //console.log(favorite_list)
-    render(currentProducts, currentPagination)
-}
 
+function saveAsFavorite(product_id) {
+    const product = currentProducts.find(product => {
+        return product.uuid === product_id;
+    });
+    const product_index = currentProducts.indexOf(product);
+    products_favorite.push(currentProducts[product_index]);
+    render(currentProducts, currentPagination);
+}
 
 //Feature 14 - Filter by favorite : Fonctionne pas
 //As a user, I want to filter by favorite products. So that I can load only my favorite products
@@ -370,25 +390,25 @@ function AddFavorite(uuid) {
 selectShowFavorite.addEventListener('change', event => {
     fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
         .then(setCurrentProducts)
-        .then(() => render(filterFavorite(currentProducts, event.target.value), currentPagination));
+        .then(() => render(filterWithFavorites(currentProducts, event.target.value), currentPagination));
 })
 
-function filterFavorite(currentProducts, selector) {
-    var filteredProducts = []
+function filterWithFavorites(currentProducts, selector) {
+    const listProducts = []
+    const found = products_favorite.includes(product.uuid);
     if (selector == "no") {
         filteredProducts = [...currentProducts]
     }
     else {
         for (var product of currentProducts) {
-
-            if (favorite_list.includes(product.uuid)) {
-                filteredProducts.push(product)
+            if (found) {
+                    listProducts.push(product)
             }
         }
     }
-
-    return filteredProducts
+    return listProducts;
 }
+
 
 //Feature 15 - Usable and pleasant UX : done 
 //As a user, I want to parse a usable and pleasant web page. So that I can find valuable and useful content
