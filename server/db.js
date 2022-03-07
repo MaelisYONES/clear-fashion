@@ -41,6 +41,23 @@ async function insert_products(products) {
 }
 //insert_products([all_products])
 
+//Find the product with a given id
+
+const { ObjectId } = require('mongodb');
+
+module.exports.find_by_id= async product_id => {
+    const db = await connect();
+    const collection = db.collection('products');
+    var query = {
+        "_id": ObjectId(product_id)
+    };
+    const products = await collection.find(query).toArray();
+    return (products)
+
+}
+//find_by_id('6225f5f535a2f05d9ccf6402')
+
+
 //Find all products related to a given brands
 //brand = "Adresse_Paris"
 //brand = "dedicated"
@@ -81,7 +98,7 @@ async function sort_by_price() {
         console.log(result);
     });
 }
-sort_by_price()
+//sort_by_price()
 
 
 
