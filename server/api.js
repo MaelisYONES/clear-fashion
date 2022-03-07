@@ -36,6 +36,12 @@ app.get('/products/:id', async (request, response) => {
     response.send({ "_id": request.params.id, "product": product })
 })
 
+// brand endpoint
+/*app.get('/products/:brand', async (request, response) => {
+    let product = await db.find_by_brand(request.params.brand)
+    response.send({ "brand": request.params.brand, "product": product })
+})*/
+
 
 /*app.get('/products/:brand', (request, response) => {
     const brand = request.params.brand
