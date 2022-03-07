@@ -62,7 +62,17 @@ module.exports.find_by_id= async product_id => {
 //brand = "Adresse_Paris"
 //brand = "dedicated"
 //brand="montlimart"
-async function find_by_brand(brand) {
+module.exports.find_by_brand = async brand =>{
+    const db = await connect();
+    const collection = db.collection('products');
+    var query = {
+        brand: brand
+    };
+    const products = await collection.find(query).toArray();
+    return (products)
+}
+
+/*async function find_by_brand(brand) {
     const db = await connect();
     const collection = db.collection('products');
     var query = {
@@ -72,7 +82,7 @@ async function find_by_brand(brand) {
         if (err) throw err;
         console.log(result);
     });
-}
+}*/
 //find_by_brand(brand)
 
 //Find all products less than a price
