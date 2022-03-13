@@ -57,6 +57,13 @@ module.exports.find_by_id= async product_id => {
 }
 //find_by_id('6225f5f535a2f05d9ccf6402')
 
+module.exports.find_withLimit = async (query, limit) => {
+    const db = await connect();
+    const collection = db.collection('products');
+    var result = await collection.find(query).toArray();
+    return result;
+}
+
 
 //Find all products related to a given brands
 //brand = "Adresse_Paris"

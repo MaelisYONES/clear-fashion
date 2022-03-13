@@ -20,7 +20,7 @@ app.get('/', (request, response) => {
   response.send({'ack': true});
 });
 
-// Pour récupérer tous les produits de notre scrapping
+// Pour récupérer tous les produits de notre scrapping à partir du document 
 app.get('/products', (request, response) => {
     response.status(200).json(products)
 });
@@ -34,6 +34,40 @@ app.get('/products', (request, response) => {
 app.get('/products/:id', async (request, response) => {
     let product = await db.find_by_id(request.params.id)
     response.send({ "_id": request.params.id, "product": product })
+})
+
+//Search endpoint for specific products
+//This endpoint accepts the following optional query string parameters:
+//limit - number of products to return (default: 12)
+//brand - filter by brand(default: All brands)
+//price - filter by price(default: All price)
+
+app.get('/products/search', async (request, response) => {
+    const { brand = "all", price = "all", limit = 12 }// default
+    if (brand === "all") {
+        const products = await db.find_withLimit([{'$match': { 'price': parseInt(price) } }, { '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
+        response.send(products);
+    } else if (price === "all") {
+        const products = await db.find_limit([{
+            '$match': { 'brand': brand }
+        }, { '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
+        response.send(products);
+    } else if (brand === "all" && price === "all") {
+        const products = await db.find_limit([{ '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
+        response.send(products);
+    } else {
+        const products = await db.find_limit([{
+            '$match': { 'brand': brand }
+        },
+        { '$match': { 'price': { '$lte': parseInt(price) } } },
+        { '$sort': { "price": 1 } }, {
+            '$limit': parseInt(limit)
+        }],
+            parseInt(limit)
+        );
+        response.send(products);
+    }
+
 })
 
 // brand endpoint
