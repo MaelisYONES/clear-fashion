@@ -217,11 +217,11 @@ document.addEventListener('DOMContentLoaded', () =>
 
 /*selectBrand.addEventListener('change', async (event) => {
     var products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
-    if (event.target.value == "all brands") {
+    if (event.target.value === "all brands") {
         products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
 
     } else {
-        products.result = products.result.filter(item => item.brand == event.target.value)
+        products.result = products.result.filter(item => item.brand === event.target.value)
     }
     setCurrentProducts();
     render(currentProducts, currentPagination);
@@ -238,11 +238,11 @@ document.addEventListener('DOMContentLoaded', () =>
 
 function filterBrand(currentProducts, brandName) {
     var filteredProducts = []
-    if (brandName == "all") {
+    if (brandName === "all") {
         filteredProducts = [...currentProducts]
     }
     for (var product of currentProducts) {
-        if (product.brand == brandName) {
+        if (product.brand === brandName) {
             filteredProducts.push(product)
         }
     }

@@ -1,4 +1,4 @@
-// tuto : https://dev.to/dalalrohit/how-to-connect-to-mongodb-atlas-using-node-js-k9i
+﻿// tuto : https://dev.to/dalalrohit/how-to-connect-to-mongodb-atlas-using-node-js-k9i
 // JavaScript source code
 const MongoClient = require('mongodb').MongoClient;
 //const { MongoClient } = require('mongodb');
@@ -57,12 +57,14 @@ module.exports.find_by_id= async product_id => {
 }
 //find_by_id('6225f5f535a2f05d9ccf6402')
 
-module.exports.find_withLimit = async (query, limit) => {
+module.exports.find_limit = async (query, limit) => {
     const db = await connect();
     const collection = db.collection('products');
-    var result = await collection.find(query).toArray();
+    const result = await collection.aggregate(query).toArray();
+
     return result;
-}
+
+};
 
 
 //Find all products related to a given brands

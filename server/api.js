@@ -20,6 +20,35 @@ app.get('/', (request, response) => {
   response.send({'ack': true});
 });
 
+
+app.get('/products/search', async (request, response) => {
+    // set default values for query parameters
+    const { brand = 'all', price = 'all', limit = 12 } = request.query;
+    if (brand === 'all' && price === 'all') {
+        const products = await db.find_limit([{ '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
+        response.send(products);
+    } else if (brand === 'all') {
+        const products = await db.find_limit([{ '$match': { 'price': parseInt(price) } }, { '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
+        response.send(products);
+    } else if (price === 'all') {
+        const products = await db.find_limit([{
+            '$match': { 'brand': brand }
+        }, { '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
+        response.send(products);
+    } else {
+        const products = await db.find_limit([{
+            '$match': { 'brand': brand }
+        },
+        { '$match': { 'price': { '$lte': parseInt(price) } } },
+        { '$sort': { "price": 1 } }, {
+            '$limit': parseInt(limit)
+        }],
+            parseInt(limit)
+        );
+        response.send(products);
+    }
+});
+
 // Pour récupérer tous les produits de notre scrapping à partir du document 
 app.get('/products', (request, response) => {
     response.status(200).json(products)
@@ -41,34 +70,6 @@ app.get('/products/:id', async (request, response) => {
 //limit - number of products to return (default: 12)
 //brand - filter by brand(default: All brands)
 //price - filter by price(default: All price)
-
-app.get('/products/search', async (request, response) => {
-    const { brand = "all", price = "all", limit = 12 }// default
-    if (brand === "all") {
-        const products = await db.find_withLimit([{'$match': { 'price': parseInt(price) } }, { '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
-        response.send(products);
-    } else if (price === "all") {
-        const products = await db.find_limit([{
-            '$match': { 'brand': brand }
-        }, { '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
-        response.send(products);
-    } else if (brand === "all" && price === "all") {
-        const products = await db.find_limit([{ '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
-        response.send(products);
-    } else {
-        const products = await db.find_limit([{
-            '$match': { 'brand': brand }
-        },
-        { '$match': { 'price': { '$lte': parseInt(price) } } },
-        { '$sort': { "price": 1 } }, {
-            '$limit': parseInt(limit)
-        }],
-            parseInt(limit)
-        );
-        response.send(products);
-    }
-
-})
 
 // brand endpoint
 /*app.get('/products/:brand', async (request, response) => {
