@@ -14,6 +14,9 @@ app.use(require('body-parser').json());
 app.use(cors());
 app.use(helmet());
 
+// server:  https://server-seven-chi.vercel.app
+// client:  https://client-three-coral.vercel.app
+
 app.options('*', cors());
 
 app.get('/', (request, response) => {
@@ -23,28 +26,22 @@ app.get('/', (request, response) => {
 
 app.get('/products/search', async (request, response) => {
     // set default values for query parameters
-    const { brand = 'all', price = 'all', limit = 12 } = request.query;
+    const { brand = 'all', price = 'all', limit = 12, skip = 0, sort = 1 } = request.query;
     if (brand === 'all' && price === 'all') {
-        const products = await db.find_limit([{ '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
+        const products = await db.find_limit([{ '$sort': { "price": parseInt(sort) } }, { '$limit': parseInt(limit) }, { '$skip': parseInt(skip) }]);
         response.send(products);
     } else if (brand === 'all') {
-        const products = await db.find_limit([{ '$match': { 'price': parseInt(price) } }, { '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
+        const products = await db.find_limit([{ '$match': { 'price': { '$lte': parseInt(price) } } }, { '$sort': { "price": parseInt(sort) } }, { '$limit': parseInt(limit) }, { '$skip': parseInt(skip) }]);
         response.send(products);
     } else if (price === 'all') {
         const products = await db.find_limit([{
             '$match': { 'brand': brand }
-        }, { '$sort': { "price": 1 } }, { '$limit': parseInt(limit) }], parseInt(limit));
+        }, { '$sort': { "price": parseInt(sort) } }, { '$limit': parseInt(limit) }, { '$skip': parseInt(skip) }]);
         response.send(products);
     } else {
-        const products = await db.find_limit([{
-            '$match': { 'brand': brand }
-        },
+        const products = await db.find_limit([{ '$match': { 'brand': brand } },
         { '$match': { 'price': { '$lte': parseInt(price) } } },
-        { '$sort': { "price": 1 } }, {
-            '$limit': parseInt(limit)
-        }],
-            parseInt(limit)
-        );
+        { '$sort': { "price": parseInt(sort) } }, { '$limit': parseInt(limit) }, { '$skip': parseInt(skip) }]);
         response.send(products);
     }
 });
