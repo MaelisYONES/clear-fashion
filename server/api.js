@@ -15,7 +15,7 @@ app.use(cors());
 app.use(helmet());
 
 // server:  https://server-seven-chi.vercel.app
-// client:  https://client-three-coral.vercel.app
+// client:  https://v2-eight-iota.vercel.app
 
 app.options('*', cors());
 
