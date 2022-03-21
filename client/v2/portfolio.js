@@ -7,14 +7,16 @@ let currentProducts = [];
 let favorite_list = [];
 let currentPagination = {};
 currentPagination['currentSize'] = 12;
+currentPagination['currentPage'] = 1;
+currentPagination['paginationChoice'] = "actual"
 let currentBrand = 'all';
 let currentMaxPrice = 1000;
 let currentSort = 1;
 
-
 // instantiate the selectors
 const selectShow = document.querySelector('#show-select');
-const selectPage = document.querySelector('#page-select');
+const selectPagePrevious = document.querySelector('#previous-page');
+const selectPageNext = document.querySelector('#next-page');
 const selectBrand = document.querySelector('#brand-select');
 const sectionProducts = document.querySelector('#products');
 const selectFilterPrice = document.querySelector('#filter-price-select')
@@ -40,24 +42,33 @@ const setCurrentProducts = ({ result, meta }) => {
 
 };
 
+
 /**
  * Fetch products from api
  * @param  {Number}  [page=1] - current page to fetch
  * @param  {Number}  [size=12] - size of the page
  * @return {Object}
  */
-const fetchProducts = async (size = currentPagination.currentSize, brand = currentBrand, price = currentMaxPrice, sort = currentSort) => {
+const fetchProducts = async (size = currentPagination.currentSize, page = "actual", brand = currentBrand, price = currentMaxPrice, sort = currentSort) => {
     if (isNaN(price)) {
         currentMaxPrice = 1000;
         price = currentMaxPrice
     }
+    if (page == "actual") { currentPagination.currentPage = 1 }
+    if (page == "next") { currentPagination.currentPage = currentPagination.currentPage + 1 }
+    if (page == "previous") { currentPagination.currentPage = currentPagination.currentPage - 1 }
+    let pageNumber = currentPagination.currentPage
+    let skip = (pageNumber - 1) * size;
+    let limit = size * pageNumber;
+    console.log("skip : ", skip, " | limit : ", limit, " | pageNumber : ", pageNumber)
     try {
         const response = await fetch(
-            `https://server-seven-chi.vercel.app/products/search?brand=${brand}&price=${price}&sort=${sort}&limit=${size}`
+            `https://server-seven-chi.vercel.app/products/search?brand=${brand}&price=${price}&sort=${sort}&limit=${limit}&skip${skip}`
         );
         const body = await response.json();
+        console.log(body)
         currentProducts = body;
-        currentPagination['currentPage'] = 1;
+        //currentPagination['currentPage'] = 1;
         currentPagination['currentSize'] = size;
         currentBrand = brand
         currentMaxPrice = price
@@ -76,6 +87,7 @@ const fetchProducts = async (size = currentPagination.currentSize, brand = curre
     }
 };
 
+
 /**
  * Render list of products
  * @param  {Array} products
@@ -83,13 +95,6 @@ const fetchProducts = async (size = currentPagination.currentSize, brand = curre
 const renderProducts = products => {
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
-    /*
-    var favourite_status = false;
-    if (product.uuid in favourite_list) {
-        favourite_status = true;
-    }*/
-
-
     const template = products
         .map(product => {
             if (favorite_list.includes(product._id)) {
@@ -108,7 +113,7 @@ const renderProducts = products => {
         <span style="text-align:center;">${product.brand}</span>
         <a href="${product.link}" target = "_blank">${product.name}</a>
         <span>${product.price}&euro;</span>
-        <button style="border: none; background : none; color:#8FB8C1; font-size : 20px;" onclick= AddFavorite('${product.uuid}')>${"&#10084;"}</button>
+        <button style="border: none; background : none; color:#8FB8C1; font-size : 20px;" onclick= AddFavorite('${product._id}')>${"&#10084;"}</button>
       </div>`;
             }
         }).join('');
@@ -121,9 +126,9 @@ const renderProducts = products => {
 };
 
 
-function AddFavorite(uuid) {
+function AddFavorite(_id) {
     //console.log(uuid)
-    favorite_list.push(uuid);
+    favorite_list.push(_id);
     //console.log(favorite_list)
     render(currentProducts, currentPagination)
 }
@@ -132,29 +137,25 @@ function AddFavorite(uuid) {
  * Render page selector
  * @param  {Object} pagination
  */
-const renderPagination = pagination => {
-    const { currentPage, pageCount } = pagination;
-    const options = Array.from(
-        { 'length': pageCount },
-        (value, index) => `<option value="${index + 1}">${index + 1}</option>`
-    ).join('');
+function renderPagination() {
+    const options = ` <button style="border: none; background : none; color:#8FB8C1; font-size : 20px;" onclick= AddFavorite('${product.uuid}')>${"&#10084;"}</button>`
 
     selectPage.innerHTML = options;
-    selectPage.selectedIndex = currentPage - 1;
+    selectPage.selectedIndex = 0;
 };
 
 // Show the list of brand names to filter
 const renderBrands = products => {
 
     const options = `<option value="all">all brands</option>
-        <option value="dedicated">dedicated</option>
+        <option value="dedicatedbrand">dedicatedbrand</option>
         <option value="montlimart">montlimart</option>
-        <option value="Adresse_Paris">adresseparis</option>`;
+        <option value="adresseparis">adresseparis</option>`;
     let i = 0
     if (currentBrand == "all") { i = 0 }
-    else if (currentBrand == "dedicated") { i = 1 }
+    else if (currentBrand == "dedicatedbrand") { i = 1 }
     else if (currentBrand == "montlimart") { i = 2 }
-    else if (currentBrand == "Adresse_Paris") { i = 3 }
+    else if (currentBrand == "adresseparis") { i = 3 }
     selectBrand.innerHTML = options;
     selectBrand.selectedIndex = i;
 };
@@ -202,16 +203,14 @@ function Percentile(p) {
 const render = (products) => {
     renderBrands(products);
     renderProducts(products);
-    //renderPagination(pagination);
+    //renderPagination();
     renderIndicators();
 
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Select the number of products to display
- */
+// Select the number of products to display
 
 
 selectShow.addEventListener('change', event => {
@@ -219,98 +218,45 @@ selectShow.addEventListener('change', event => {
         .then(() => render(currentProducts)); //, pagination
 });
 
+//Feature 1 - Browse pages
 
-/*
-Feature 1 - Browse pages
-As a user
-I want to browse available pages
-So that I can load more products
-*/
-selectPage.addEventListener('change', event => {
-    fetchProducts(parseInt(event.target.value), currentPagination.pageSize)
-        .then(setCurrentProducts)
-        .then(() => render(currentProducts, currentPagination));
+selectPagePrevious.addEventListener('click', event => {
+    fetchProducts(currentPagination.currentSize, "previous")
+        .then(() => render(currentProducts)); //, pagination
+});
+selectPageNext.addEventListener('click', event => {
+    fetchProducts(currentPagination.currentSize, "next")
+        .then(() => render(currentProducts)); //, pagination
 });
 
-/*
-Feature 2 - Filter by brands
-As a user
-I want to filter by brands name
-So that I can browse product for a specific brand
-*/
+//Feature 2 - Filter by brands
+
 
 selectBrand.addEventListener('change', event => {
-    fetchProducts(currentPagination.currentSize, event.target.value)
+    fetchProducts(currentPagination.currentSize, "actual", event.target.value)
         .then(() => render(currentProducts));
 })
 
 
-/*
-Feature 3 - Filter by recent products
-As a user
-I want to filter by recent products
-So that I can browse the new released products (less than 2 weeks)
-*/
-
-/*
-selectFilterDate.addEventListener('change', event => {
-    fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
-        .then(setCurrentProducts)
-        .then(() => render(filterDate(currentProducts, event.target.value), currentPagination));
-})
-function filterDate(currentProducts, selector) {
-    var filteredProducts = []
-    if (selector == "no_filter") {
-        filteredProducts = [...currentProducts]
-    }
-    else {
-        for (var product of currentProducts) {
-            let today = new Date('2022-01-30')
-            let released = new Date(product.released);
-            if (today - released < 14 * 1000 * 60 * 60 * 24) {
-                filteredProducts.push(product)
-            }
-        }
-    }
-    return filteredProducts
-}*/
-
-/*
- Feature 4 - Filter by reasonable price
-As a user
-I want to filter by reasonable price
-So that I can buy affordable product i.e less than 50
-*/
+//Feature 4 - Filter by reasonable price
 
 selectFilterPrice.addEventListener('change', event => {
-    fetchProducts(currentPagination.currentSize, currentBrand, parseInt(event.target.value))
+    fetchProducts(currentPagination.currentSize, currentPagination.currentPage, currentBrand, parseInt(event.target.value))
         .then(() => render(currentProducts));
 })
 
-/*
-Feature 5 - Sort by price
-As a user
-I want to sort by price
-So that I can easily identify cheapest and expensive products
-Feature 6 - Sort by date
-As a user
-I want to sort by price
-So that I can easily identify recent and old products
-*/
+//Feature 5 - Sort by price
 
 selectSort.addEventListener('change', event => {
-    fetchProducts(currentPagination.currentSize, currentBrand, currentMaxPrice, parseInt(event.target.value))
+    fetchProducts(currentPagination.currentSize, currentPagination.currentPage, currentBrand, currentMaxPrice, parseInt(event.target.value))
         .then(() => render(currentProducts));
 })
 
-
-
-
+//Feature 14 - Filter by favorite
 
 selectFilterFavorite.addEventListener('change', event => {
-    fetchProducts(currentPagination.currentPage, currentPagination.pageSize)
-        .then(setCurrentProducts)
-        .then(() => render(filterFavorite(currentProducts, event.target.value), currentPagination));
+    fetchProducts()
+        .then(() => render(filterFavorite(currentProducts, event.target.value)));
 })
 
 function filterFavorite(currentProducts, selector) {
@@ -320,13 +266,11 @@ function filterFavorite(currentProducts, selector) {
     }
     else {
         for (var product of currentProducts) {
-
-            if (favorite_list.includes(product.uuid)) {
+            if (favorite_list.includes(product._id)) {
                 filteredProducts.push(product)
             }
         }
     }
-
     return filteredProducts
 }
 

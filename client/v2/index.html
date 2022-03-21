@@ -26,10 +26,6 @@
                  </select>
              </div>
 
-             <div id="page">
-                 <label for="page-select">Go to page:</label>
-                 <select name="page" id="page-select"> </select>
-             </div>
              <div id="filter-price">
                  <label for="filter-price-select">Filter price:</label>
                  <select name="filter-price" id="filter-price-select">
@@ -45,12 +41,12 @@
                  </select>
              </div>
              <!--<div id="filter-date">
-                <label for="filter-date-select">Filter date:</label>
-                <select name="filter-date" id="filter-date-select">
-                    <option value="no_filter">No filter</option>
-                    <option value="recent_product">Recent product</option>
-                </select>
-            </div>-->
+        <label for="filter-date-select">Filter date:</label>
+        <select name="filter-date" id="filter-date-select">
+            <option value="no_filter">No filter</option>
+            <option value="recent_product">Recent product</option>
+        </select>
+    </div>-->
 
              <div id="brand">
                  <label for="brand-select">Brands:</label>
@@ -64,8 +60,13 @@
                      <option value="1">Cheaper</option>
                      <option value="-1">Expensive</option>
                      <!--<option value="date-asc">Recently released</option>
-                    <option value="date-desc">Anciently released</option>-->
+            <option value="date-desc">Anciently released</option>-->
                  </select>
+             </div>
+             <div id="page">
+                 <input type="button" id="previous-page" value="<" style="border : 2px solid  #FFBEA1; background :  #FFBEA1; color: black; font-size : 20px;">
+                 <input type="button" id="next-page" value=">" style="border : 2px solid  #FFBEA1;background :  #FFBEA1; color: black; font-size : 20px;">
+
              </div>
          </div>
          <div>
