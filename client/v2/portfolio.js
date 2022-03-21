@@ -89,6 +89,7 @@ const renderProducts = products => {
         favourite_status = true;
     }*/
 
+
     const template = products
         .map(product => {
             if (favorite_list.includes(product._id)) {
