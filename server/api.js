@@ -48,9 +48,14 @@ app.get('/products/search', async (request, response) => {
 
 // Pour récupérer tous les produits de notre scrapping à partir du document 
 app.get('/products', (request, response) => {
-    response.status(200).json(products)
+    let product = await db.find_by_brand(request.params.brand)
+    response.send(product)
 });
 
+// Pour récupérer tous les produits de notre scrapping à partir de notre base de données
+//app.get('/products', (request, response) => {
+//    response.status(200).json(products)
+//});
 /*app.get('/products/:id', (request, response) => {
     const id = request.params.id
     const product = products.find(product => product.id === id)
