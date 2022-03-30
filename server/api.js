@@ -20,7 +20,13 @@ app.use(helmet());
 app.options('*', cors());
 
 app.get('/', (request, response) => {
-  response.send({'ack': true});
+    response.send({ 'ack': true });
+});
+
+// Pour récupérer tous les produits de notre scrapping à partir du document 
+app.get('/products', async (request, response) => {
+    let product = await db.find_by_brand(request.params.brand)
+    response.send(product)
 });
 
 
@@ -46,11 +52,13 @@ app.get('/products/search', async (request, response) => {
     }
 });
 
-// Pour récupérer tous les produits de notre scrapping à partir du document 
-app.get('/products', (request, response) => {
-    let product = await db.find_by_brand(request.params.brand)
-    response.send(product)
-});
+app.get('/products/:id', async (request, response) => {
+    //console.log(request.params.id)
+    let product = await db.find_by_id(request.params.id)
+
+    response.send({ "product": product })
+})
+
 
 // Pour récupérer tous les produits de notre scrapping à partir de notre base de données
 //app.get('/products', (request, response) => {
@@ -62,10 +70,6 @@ app.get('/products', (request, response) => {
     response.status(200).json(products)
 });*/
 
-app.get('/products/:id', async (request, response) => {
-    let product = await db.find_by_id(request.params.id)
-    response.send({ "_id": request.params.id, "product": product })
-})
 
 //Search endpoint for specific products
 //This endpoint accepts the following optional query string parameters:
@@ -90,6 +94,7 @@ app.get('/products/:id', async (request, response) => {
     }
     response.status(200).json(product)
 });*/
+
 
 app.listen(PORT);
 

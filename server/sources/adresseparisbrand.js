@@ -13,7 +13,7 @@ const parse = data => {
     return $('.product_list .ajax_block_product')
         .map((i, element) => {
 
-            const brand = "Adresse_Paris"; 
+            const brand = "adresseparis"; 
             const name = $(element)
                 .find('.product-name')
                 .text()
@@ -26,7 +26,8 @@ const parse = data => {
                     .text()
             );
 
-            const image = $(element).find('img').attr('src');
+            const image = $(element).find('a img.replace-2x.lazy.img_0')
+                .attr('data-original');
 
             var link = $(element)
                 .find('.product-name').attr('href');

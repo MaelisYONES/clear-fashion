@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 
+// Problem : only a few products are loading
 /**
  * Parse webpage e-shop
  * @param  {String} data - html response
@@ -9,28 +10,25 @@ const cheerio = require('cheerio');
 const parse = data => {
     const $ = cheerio.load(data);
 
-    return $('.category-products .products-grid .item .product-info')
+    return $('.category-products .products-grid .item')
         .map((i, element) => {
-            const brand = "montlimart"
-            let name_ = $(element)
-                //.find('.product-name')
-                .find('a')
+            let name = $(element)
+                .find('.product-info a')
                 .text()
                 .trim()
-                .replace(/\s/g, ' ').split("  ");
-            const price = parseInt(
-                $(element)
-                    .find('.price')
-                    .text()
-            );
-           
-            const image = $(element).find('img').attr('src');
-            var color = name_[name_.length - 1];
-            var link = $(element)
-                //.find('.product-name').attr('a href');
-                .find('a').attr('href');
-            var name = name_[0] + color;
-            return {brand, name, price, image, link };
+                .replace(/\s/g, ' ').split("   ");
+
+            const brand="montlimart"
+
+            const price =
+                parseInt($(element)
+                    .find('.product-info .price').text());
+            const link = $(element).find('.product-info a').attr('href');
+            const last = name[name.length - 1] // last element of the list : color
+            name = name[0] + last; // we keep the name and the color of the product
+            let image = $(element).find('img').attr('src')
+            if (image !== undefined) image = image.toString().replace(' ', '%20');
+            return { brand, name, link, price, image };
         })
         .get();
 };
@@ -57,6 +55,4 @@ module.exports.scrape = async url => {
         console.error(error);
         return null;
     }
-
 };
-
