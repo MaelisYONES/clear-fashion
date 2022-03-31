@@ -57,15 +57,16 @@ const fetchProducts = async (size = currentPagination.currentSize, page = "actua
     if (page == "actual") { currentPagination.currentPage = 1 }
     if (page == "next") { currentPagination.currentPage = currentPagination.currentPage + 1 }
     if (page == "previous") { currentPagination.currentPage = currentPagination.currentPage - 1 }
+    if (currentPagination.currentPage < 1) { currentPagination.currentPage = 1 }
     let pageNumber = currentPagination.currentPage
     let skip = (pageNumber - 1) * size;
     let limit = size * pageNumber;
     console.log("skip : ", skip, " | limit : ", limit, " | pageNumber : ", pageNumber)
     try {
-        const response = await fetch(
+        let response = await fetch(
             `https://server-seven-chi.vercel.app/products/search?brand=${brand}&price=${price}&sort=${sort}&limit=${limit}&skip${skip}`
         );
-        const body = await response.json();
+        let body = await response.json();
         console.log(body)
         currentProducts = body;
         //currentPagination['currentPage'] = 1;
@@ -95,35 +96,52 @@ const fetchProducts = async (size = currentPagination.currentSize, page = "actua
 const renderProducts = products => {
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
-    const template = products
+    let template = `<div class="cards">`
+    template += products
         .map(product => {
             if (favorite_list.includes(product._id)) {
                 return `
-      <div class="product" id=${product._id}>
-        <span >${product.brand}</span>
-        <a href="${product.link}">${product.name}</a>
-        <span>${product.price}&euro;</span>
-        <span>&nbsp;</span>
- <div class="image"><img src = "${product.image}" /></div>
-        <span style="color:#FF8773; font-size:20px">${"&#10084;"}</span>
+      <div class="card" id=${product._id}>
+<div class="image-container">
+                    <div class="first">
+                        <div class="d-flex justify-content-between align-items-center">  <button class="wishlist" style="border: none;color:#FF8773" onclick= DeleteFavourite('${product._id}')>${"&#10084;"}</button> </div>
+                    </div> <img src="${product.image}" class="img-fluid rounded thumbnail-image">
+                </div><div class="product-detail-container p-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="${product.link}">${product.name}</br></a>
+                            <a class="new-price">${product.price}€</a>
+                            <h5 class="brand-name">${product.brand}</h5>
+                        </div>
+                    </div>
+         
       </div>`;
             }
             else {
                 return `
-      <div class="product" id=${product._id}>
-        <span style="text-align:center;">${product.brand}</span>
-        <a href="${product.link}" target = "_blank">${product.name}</a>
-        <span>${product.price}&euro;</span>
-         <div class="image"><img src = "${product.image}"/></div>
-        <button style="border: none; background : none; color:#8FB8C1; font-size : 20px;" onclick= AddFavorite('${product._id}')>${"&#10084;"}</button>
+      <div class="card"   id=${product._id}>
+<div class="image-container" >
+                    <div class="first">
+                        <div class="d-flex justify-content-between align-items-center">  <button class="wishlist" style="border: none; color:#8FB8C1" onclick= AddFavorite('${product._id}')>${"&#10084;"}</button> </div>
+                    </div> <img src="${product.image}" class="img-fluid rounded thumbnail-image">
+                </div><div class="product-detail-container p-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="${product.link}">${product.name}</br></a>
+                            <a class="new-price">${product.price}€</a>
+                            <h5 class="brand-name">${product.brand}</h5>
+                        </div>
+                    </div>
+         
       </div>`;
             }
         }).join('');
+    template += `</div>`
 
     div.innerHTML = template;
     fragment.appendChild(div);
-    sectionProducts.innerHTML = '<h2>Products</h2>';
+    sectionProducts.innerHTML = '<h2></br><i class="fa-solid fa-shirt"></i> Products:</h2>';
+    //sectionProducts.appendChild(`<div class="cards">`);
     sectionProducts.appendChild(fragment);
+    //sectionProducts.appendChild(`</div>`)
 
 };
 
@@ -131,6 +149,13 @@ const renderProducts = products => {
 function AddFavorite(_id) {
     //console.log(uuid)
     favorite_list.push(_id);
+    //console.log(favorite_list)
+    render(currentProducts, currentPagination)
+}
+
+function DeleteFavorite(_id) {
+    //console.log(uuid)
+    //favorite_list.push(_id);
     //console.log(favorite_list)
     render(currentProducts, currentPagination)
 }
@@ -145,6 +170,7 @@ function renderPagination() {
     selectPage.innerHTML = options;
     selectPage.selectedIndex = 0;
 };
+
 
 // Show the list of brand names to filter
 const renderBrands = products => {
@@ -261,21 +287,25 @@ selectFilterFavorite.addEventListener('change', event => {
         .then(() => render(filterFavorite(currentProducts, event.target.value)));
 })
 
+
 function filterFavorite(currentProducts, selector) {
-    var filteredProducts = []
-    if (selector == "no_filter") {
-        filteredProducts = [...currentProducts]
+    console.log(selectFilterFavorite.checked)
+    if (selectFilterFavorite.checked == false) {
+
+        return currentProducts
     }
     else {
+        var filteredProducts = []
         for (var product of currentProducts) {
             if (favorite_list.includes(product._id)) {
                 filteredProducts.push(product)
             }
         }
-    }
-    return filteredProducts
-}
 
+        return filteredProducts
+    }
+
+}
 
 document.addEventListener('DOMContentLoaded', () =>
     fetchProducts()

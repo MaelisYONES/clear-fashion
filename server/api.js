@@ -24,11 +24,16 @@ app.get('/', (request, response) => {
 });
 
 // Pour récupérer tous les produits de notre scrapping à partir du document 
-app.get('/products', async (request, response) => {
+/*app.get('/products', async (request, response) => {
     let product = await db.find_by_brand(request.params.brand)
     response.send(product)
-});
+});*/
 
+app.get('/products', async (request, response) => {
+    //await connection();
+    let products = await db.all_products();
+    response.send({ "all products": products });
+})
 
 app.get('/products/search', async (request, response) => {
     // set default values for query parameters

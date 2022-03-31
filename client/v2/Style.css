@@ -1,16 +1,3 @@
-.header {
-    background-color: #000000;
-    background-image: url('image.jpg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    line-height: 3.2;
-    padding: 5vw 2em;
-    text-align: center;
-    color: #ffffff;
-}
-
-
 body {
     margin: 0 auto;
     max-width: 50em;
@@ -60,7 +47,120 @@ a {
     text-align: center;
     margin-bottom: 2em;
     border: 2px solid rgb(77, 86, 128);
-    padding: 5px;
-    border-radius: 10% / 60%;
+    padding-left: 10px;
+
     background-clip: content-box;
 }
+
+.product-im {
+    text-align: right;
+}
+
+.column {
+    float: left;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-color: #fff;
+}
+
+.left {
+    width: 44%;
+    height: 200px;
+    margin-right: 20px;
+}
+
+.right {
+    width: 43%;
+    height: 200px;
+    column-width: 60px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+.container {
+    width: 900px;
+    margin-top: 20px
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center
+}
+
+.card {
+    background-color: #fff;
+    border: none;
+    border-radius: 10px;
+    width: 226px;
+    height: 350px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-top: 20px;
+    margin-right: 20px;
+    padding: 10px;
+}
+
+.image-container {
+    position: relative;
+}
+
+.thumbnail-image {
+    border-radius: 10px !important;
+    height: 230px;
+    width: 226px;
+}
+
+
+.wishlist {
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    cursor: pointer
+}
+
+.first {
+    position: absolute;
+    width: 100%;
+    padding: 9px
+}
+
+.dress-name {
+    font-size: 13px;
+    font-weight: bold;
+    width: 75%
+}
+
+
+.new-price {
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+    background-color: #ff8773;
+    padding: 5px;
+    border-radius: 20%
+}
+
+/*footer*/
+
+footer {
+    margin-top: 50px;
+    color: black;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+

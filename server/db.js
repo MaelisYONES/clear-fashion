@@ -119,5 +119,12 @@ async function sort_by_price() {
 }
 //sort_by_price()
 
+module.exports.all_products = async () => {
+    const db = await connect();
+    const collection = await db.collection("products");
+    const all_products = await collection.find().toArray();
+    console.log(all_products);
+    return (all_products);
+}
 
 
