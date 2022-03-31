@@ -67,6 +67,17 @@ const fetchProducts = async (size = currentPagination.currentSize, page = "actua
             `https://server-seven-chi.vercel.app/products/search?brand=${brand}&price=${price}&sort=${sort}&limit=${limit}&skip${skip}`
         );
         let body = await response.json();
+        if (body.length == 0) {
+            currentPagination.currentPage = currentPagination.currentPage - 1
+            let pageNumber = currentPagination.currentPage
+            let skip = (pageNumber - 1) * size;
+            let limit = size * pageNumber;
+            console.log("skip : ", skip, " | limit : ", limit, " | pageNumber : ", pageNumber)
+            response = await fetch(
+                `https://server-seven-chi.vercel.app/products/search?brand=${brand}&price=${price}&sort=${sort}&limit=${limit}&skip${skip}`
+            );
+            body = await response.json()
+        }
         console.log(body)
         currentProducts = body;
         //currentPagination['currentPage'] = 1;
@@ -101,17 +112,21 @@ const renderProducts = products => {
         .map(product => {
             if (favorite_list.includes(product._id)) {
                 return `
-      <div class="card" id=${product._id}>
-<div class="image-container">
+                <div class="card" id=${product._id}>
+                
+                 <h5 class="brand-name">${product.brand}</h5>
+                <div class="image-container">
                     <div class="first">
-                        <div class="d-flex justify-content-between align-items-center">  <button class="wishlist" style="border: none;color:#FF8773" onclick= DeleteFavourite('${product._id}')>${"&#10084;"}</button> </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                    </div>
                     </div> <img src="${product.image}" class="img-fluid rounded thumbnail-image">
-                </div><div class="product-detail-container p-2">
+                </div>
+                <div class="product-detail-container p-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <a href="${product.link}">${product.name}</br></a>
                             <a class="new-price">${product.price}€</a>
-                            <h5 class="brand-name">${product.brand}</h5>
                         </div>
+    <button class="wishlist" style="border: none;color:#FF8773" onclick= DeleteFavorite('${product._id}')>${"&#10084;"}</button> 
                     </div>
          
       </div>`;
@@ -119,16 +134,19 @@ const renderProducts = products => {
             else {
                 return `
       <div class="card"   id=${product._id}>
+                        <h5 class="brand-name">${product.brand}</h5>
 <div class="image-container" >
                     <div class="first">
-                        <div class="d-flex justify-content-between align-items-center">  <button class="wishlist" style="border: none; color:#8FB8C1" onclick= AddFavorite('${product._id}')>${"&#10084;"}</button> </div>
+                        <div class="d-flex justify-content-between align-items-center"> 
+                                </div>
+                            
                     </div> <img src="${product.image}" class="img-fluid rounded thumbnail-image">
                 </div><div class="product-detail-container p-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <a href="${product.link}">${product.name}</br></a>
                             <a class="new-price">${product.price}€</a>
-                            <h5 class="brand-name">${product.brand}</h5>
                         </div>
+<button class="wishlist" style="border: none; color:#8FB8C1" onclick= AddFavorite('${product._id}')>${"&#10084;"}</button>
                     </div>
          
       </div>`;

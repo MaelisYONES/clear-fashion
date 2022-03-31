@@ -1,6 +1,5 @@
 body {
     margin: 0 auto;
-    max-width: 50em;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.5;
     padding: 2em 1em;
@@ -56,15 +55,6 @@ a {
     text-align: right;
 }
 
-.column {
-    float: left;
-    border-radius: 10px;
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    background-color: #fff;
-}
 
 .left {
     width: 44%;
@@ -100,8 +90,8 @@ a {
     background-color: #fff;
     border: none;
     border-radius: 10px;
-    width: 226px;
-    height: 350px;
+    width: 250px;
+    height: 500px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     margin-top: 20px;
     margin-right: 20px;
@@ -146,21 +136,10 @@ a {
 
 .new-price {
     font-size: 13px;
-    font-weight: bold;
     color: white;
-    background-color: #ff8773;
+    background-color: #AC459F;
     padding: 5px;
     border-radius: 20%
-}
-
-/*footer*/
-
-footer {
-    margin-top: 50px;
-    color: black;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 
